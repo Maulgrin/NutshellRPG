@@ -83,8 +83,7 @@ class NutshellCharacterSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    if (!this.isEditable) return;
-
+    // Roll buttons should work even on non-editable sheets.
     html.find('[data-action="skill-roll"]').on("click", this._onSkillRoll.bind(this));
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));

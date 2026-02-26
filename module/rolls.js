@@ -13,6 +13,11 @@ const SKILL_LABELS = {
 };
 
 const TARGET_OPTIONS = [4, 6, 8, 10, 12, 14];
+const SOCKET_ACTIONS = {
+  REQUEST_GM_SKILL_ROLL: "REQUEST_GM_SKILL_ROLL",
+  REQUEST_GM_RANGED_ATTACK: "REQUEST_GM_RANGED_ATTACK",
+  REQUEST_GM_CLOSE_OPPOSED: "REQUEST_GM_CLOSE_OPPOSED"
+};
 
 function getSkillValue(actor, skillKey) {
   return Number(foundry.utils.getProperty(actor, `system.skills.${skillKey}`) ?? 0);
@@ -142,19 +147,62 @@ async function promptForTargetChoice({ title, defaultValue = 8 }) {
   });
 }
 
-async function genericSkillRoll(actor, skillKey) {
-  const skillName = SKILL_LABELS[skillKey] ?? skillKey;
-  const modifier = getSkillValue(actor, skillKey);
-  const roll = await new Roll("2d6 + @modifier", { modifier }).evaluate();
-  const total = Number(roll.total ?? 0);
-  if (!game.user.isGM) {
-    ui.notifications.info("GM should select the target number for this roll.");
+function getActiveGM() {
+  return game.users.activeGM ?? game.users.find((user) => user.isGM && user.active);
+}
+
+async function requestGmSkillRoll(actor, skillKey) {
+  const activeGM = getActiveGM();
+  if (!activeGM) {
+    ui.notifications.error("No active GM is connected to set a target number.");
+    return false;
   }
+  if (!game.socket) {
+    ui.notifications.error("Socket connection is unavailable for GM roll requests.");
+    return false;
+  }
+
+  game.socket.emit(`system.${game.system.id}`, {
+    action: SOCKET_ACTIONS.REQUEST_GM_SKILL_ROLL,
+    actorUuid: actor.uuid,
+    skillKey,
+    requesterId: game.user.id
+  });
+  ui.notifications.info("Requested GM target selection for this roll.");
+  return true;
+}
+
+async function requestGmAction(actor, action, message) {
+  const activeGM = getActiveGM();
+  if (!activeGM) {
+    ui.notifications.error("No active GM is connected to set a target number.");
+    return false;
+  }
+  if (!game.socket) {
+    ui.notifications.error("Socket connection is unavailable for GM roll requests.");
+    return false;
+  }
+
+  game.socket.emit(`system.${game.system.id}`, {
+    action,
+    actorUuid: actor.uuid,
+    requesterId: game.user.id
+  });
+  ui.notifications.info(message);
+  return true;
+}
+
+async function resolveGenericSkillRoll(actor, skillKey) {
+  const skillName = SKILL_LABELS[skillKey] ?? skillKey;
   const targetNumber = await promptForTargetChoice({
     title: `${skillName} Roll`,
     defaultValue: 8
   });
   if (targetNumber === null) return;
+
+  const modifier = getSkillValue(actor, skillKey);
+  const roll = await new Roll("2d6 + @modifier", { modifier }).evaluate();
+  const total = Number(roll.total ?? 0);
   const difference = total - targetNumber;
   const success = difference >= 0;
 
@@ -169,7 +217,15 @@ async function genericSkillRoll(actor, skillKey) {
   });
 }
 
-async function rangedAttack(actor) {
+async function genericSkillRoll(actor, skillKey) {
+  if (!game.user.isGM) {
+    await requestGmSkillRoll(actor, skillKey);
+    return;
+  }
+  return resolveGenericSkillRoll(actor, skillKey);
+}
+
+async function resolveRangedAttack(actor) {
   const targetNumber = await promptForNumber({
     title: "Ranged Attack",
     label: "Target Number",
@@ -197,19 +253,19 @@ async function rangedAttack(actor) {
   });
 }
 
-async function closeCombatOpposed(actor) {
-  const defenderTotal = await promptForNumber({
+async function resolveCloseCombatOpposed(actor) {
+  const targetNumber = await promptForNumber({
     title: "Close Combat Opposed",
-    label: "Defender Total",
+    label: "Target Number",
     defaultValue: 8
   });
 
-  if (defenderTotal === null) return;
+  if (targetNumber === null) return;
 
   const modifier = getSkillValue(actor, "closeCombat");
   const roll = await new Roll("2d6 + @modifier", { modifier }).evaluate();
   const total = Number(roll.total ?? 0);
-  const difference = total - defenderTotal;
+  const difference = total - targetNumber;
   const success = difference >= 0;
   const strikes = success ? strikesFromDifference(difference) : 0;
 
@@ -218,11 +274,27 @@ async function closeCombatOpposed(actor) {
     roll,
     modifier,
     total,
-    targetNumber: defenderTotal,
+    targetNumber,
     success,
     difference,
     strikes
   });
+}
+
+async function rangedAttack(actor) {
+  if (!game.user.isGM) {
+    await requestGmAction(actor, SOCKET_ACTIONS.REQUEST_GM_RANGED_ATTACK, "Requested GM target entry for ranged attack.");
+    return;
+  }
+  return resolveRangedAttack(actor);
+}
+
+async function closeCombatOpposed(actor) {
+  if (!game.user.isGM) {
+    await requestGmAction(actor, SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED, "Requested GM target entry for close combat opposed.");
+    return;
+  }
+  return resolveCloseCombatOpposed(actor);
 }
 
 const NutshellRolls = {
@@ -232,11 +304,58 @@ const NutshellRolls = {
   closeCombatOpposed
 };
 
+let socketListenersRegistered = false;
+
+function registerSocketListeners() {
+  if (socketListenersRegistered) return;
+  if (!game.socket) return;
+
+  game.socket.on(`system.${game.system.id}`, async (payload) => {
+    if (!payload) return;
+    const supportedActions = new Set([
+      SOCKET_ACTIONS.REQUEST_GM_SKILL_ROLL,
+      SOCKET_ACTIONS.REQUEST_GM_RANGED_ATTACK,
+      SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED
+    ]);
+    if (!supportedActions.has(payload.action)) return;
+    if (!game.user.isGM) return;
+
+    // Only one active GM should adjudicate incoming skill roll requests.
+    const activeGM = getActiveGM();
+    if (activeGM && activeGM.id !== game.user.id) return;
+
+    const actor = await fromUuid(payload.actorUuid);
+    if (!(actor instanceof Actor)) {
+      ui.notifications.error("Requested actor could not be found for GM roll request.");
+      return;
+    }
+    switch (payload.action) {
+      case SOCKET_ACTIONS.REQUEST_GM_SKILL_ROLL:
+        await resolveGenericSkillRoll(actor, payload.skillKey);
+        break;
+      case SOCKET_ACTIONS.REQUEST_GM_RANGED_ATTACK:
+        await resolveRangedAttack(actor);
+        break;
+      case SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED:
+        await resolveCloseCombatOpposed(actor);
+        break;
+      default:
+        break;
+    }
+  });
+
+  socketListenersRegistered = true;
+}
+
 globalThis.NutshellRolls = NutshellRolls;
 
 Hooks.once("init", () => {
   game.nutshell = game.nutshell || {};
   game.nutshell.rolls = NutshellRolls;
+});
+
+Hooks.once("ready", () => {
+  registerSocketListeners();
 });
 
 export { SKILL_LABELS, genericSkillRoll, rangedAttack, closeCombatOpposed };
