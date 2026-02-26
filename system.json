@@ -25,5 +25,15 @@
     "Actor": {
       "character": {}
     }
-  }
+  },
+  "packs": [
+    {
+      "label": "Reference Charts",
+      "type": "JournalEntry",
+      "name": "reference-charts",
+      "path": "packs/reference-charts.db",
+      "system": "nutshell",
+      "package": "system"
+    }
+  ]
 }

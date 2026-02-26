@@ -12,6 +12,72 @@ const SKILL_FIELDS = [
   { key: "operate", label: "Operate" }
 ];
 
+const REFERENCE_CHARTS = [
+  {
+    name: "Target Number Chart",
+    content: `<h2>Target Number Chart</h2>
+<table>
+<tr><th>Difficulty</th><th>Target Number</th></tr>
+<tr><td>Simple</td><td>4+</td></tr>
+<tr><td>Easy</td><td>6+</td></tr>
+<tr><td>Average</td><td>8+</td></tr>
+<tr><td>Difficult</td><td>10+</td></tr>
+<tr><td>Challenging</td><td>12+</td></tr>
+<tr><td>Extraordinary</td><td>14+</td></tr>
+</table>`
+  },
+  {
+    name: "Degrees of Success",
+    content: `<h2>Degrees of Success</h2>
+<p>Difference between roll total and Target Number:</p>
+<table>
+<tr><th>Difference</th><th>Strikes Inflicted</th></tr>
+<tr><td>0&ndash;1</td><td>1 Strike</td></tr>
+<tr><td>2&ndash;4</td><td>2 Strikes</td></tr>
+<tr><td>5&ndash;7</td><td>3 Strikes</td></tr>
+<tr><td>8+</td><td>4 Strikes</td></tr>
+</table>`
+  }
+];
+
+async function seedReferenceChartsCompendium() {
+  const pack = game.packs.get("nutshell.reference-charts");
+  if (!pack) return;
+
+  await pack.getIndex();
+  const existingNames = new Set(pack.index.map((entry) => entry.name));
+  const missingCharts = REFERENCE_CHARTS.filter((chart) => !existingNames.has(chart.name));
+  if (!missingCharts.length) return;
+
+  const htmlFormat = CONST?.JOURNAL_ENTRY_PAGE_FORMATS?.HTML ?? 1;
+  const journals = missingCharts.map((chart) => ({
+    name: chart.name,
+    pages: [
+      {
+        name: chart.name,
+        type: "text",
+        text: {
+          content: chart.content,
+          format: htmlFormat
+        }
+      }
+    ]
+  }));
+
+  const relockAfterCreate = pack.locked;
+  if (relockAfterCreate) {
+    await pack.configure({ locked: false });
+  }
+
+  try {
+    await JournalEntry.createDocuments(journals, { pack: pack.collection });
+  } finally {
+    if (relockAfterCreate) {
+      await pack.configure({ locked: true });
+    }
+  }
+}
+
 class NutshellCharacterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
@@ -125,9 +191,18 @@ Hooks.once("init", () => {
   });
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
   game.nutshell = game.nutshell || {};
   if (!game.nutshell.rolls && globalThis.NutshellRolls) {
     game.nutshell.rolls = globalThis.NutshellRolls;
+  }
+
+  if (!game.user.isGM) return;
+  if (game.users.activeGM?.id !== game.user.id) return;
+
+  try {
+    await seedReferenceChartsCompendium();
+  } catch (error) {
+    ui.notifications?.warn("Nutshell | Unable to seed the Reference Charts compendium automatically.");
   }
 });
