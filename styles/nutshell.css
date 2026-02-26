@@ -1,0 +1,91 @@
+.nutshell-sheet {
+  color: #000;
+  background: #fff;
+  padding: 12px;
+  gap: 12px;
+}
+
+.nutshell-sheet .sheet-header,
+.nutshell-sheet .sheet-section,
+.nutshell-sheet .sheet-footer {
+  border: 1px solid #000;
+  padding: 10px;
+  background: #fff;
+}
+
+.nutshell-sheet label {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.nutshell-sheet input,
+.nutshell-sheet textarea,
+.nutshell-sheet button {
+  font: inherit;
+  color: #000;
+}
+
+.nutshell-sheet input,
+.nutshell-sheet textarea {
+  width: 100%;
+  border: 1px solid #000;
+  background: #fff;
+  padding: 4px 6px;
+}
+
+.nutshell-sheet .strikes-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nutshell-sheet .skills-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nutshell-sheet .skills-table th,
+.nutshell-sheet .skills-table td {
+  border: 1px solid #000;
+  padding: 6px;
+  text-align: left;
+}
+
+.nutshell-sheet .skills-table td:last-child,
+.nutshell-sheet .skills-table th:last-child {
+  width: 110px;
+  text-align: center;
+}
+
+.nutshell-sheet button {
+  border: 1px solid #000;
+  background: #fff;
+  padding: 4px 8px;
+}
+
+.nutshell-sheet .sheet-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.nutshell-chat-card {
+  color: #000;
+}
+
+.nutshell-chat-card h3 {
+  margin: 0 0 8px;
+}
+
+.nutshell-chat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nutshell-chat-table th,
+.nutshell-chat-table td {
+  border: 1px solid #000;
+  padding: 4px 6px;
+  text-align: left;
+}

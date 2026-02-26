@@ -1,0 +1,28 @@
+{
+  "id": "nutshell",
+  "title": "Nutshell RPG",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  },
+  "authors": [
+    {
+      "name": "Todd Beaumont"
+    }
+  ],
+  "scripts": [
+    "module/nutshell.js"
+  ],
+  "styles": [
+    "styles/nutshell.css"
+  ],
+  "esmodules": [
+    "module/rolls.js"
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {}
+    }
+  }
+}

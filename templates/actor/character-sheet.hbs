@@ -1,0 +1,65 @@
+<form class="{{cssClass}} nutshell-sheet flexcol" autocomplete="off">
+  <header class="sheet-header">
+    <label for="actor-name">Name</label>
+    <input id="actor-name" type="text" name="name" value="{{actor.name}}" />
+  </header>
+
+  <section class="sheet-section strikes-section">
+    <h2>Strikes</h2>
+    <div class="strikes-grid">
+      <label>
+        <span>Max</span>
+        <input type="number" name="system.strikes.max" value="{{system.strikes.max}}" readonly />
+      </label>
+      <label>
+        <span>Taken</span>
+        <input type="number" name="system.strikes.taken" value="{{system.strikes.taken}}" />
+      </label>
+      <label>
+        <span>Remaining</span>
+        <input type="number" name="system.strikes.remaining" value="{{system.strikes.remaining}}" readonly />
+      </label>
+    </div>
+  </section>
+
+  <section class="sheet-section">
+    <label for="power-theme">Power Theme</label>
+    <input id="power-theme" type="text" name="system.powerTheme" value="{{system.powerTheme}}" />
+  </section>
+
+  <section class="sheet-section">
+    <label for="gear">Gear</label>
+    <textarea id="gear" name="system.gear" rows="4">{{system.gear}}</textarea>
+  </section>
+
+  <section class="sheet-section skills-section">
+    <h2>Skills</h2>
+    <table class="skills-table">
+      <thead>
+        <tr>
+          <th>Skill Name</th>
+          <th>Value</th>
+          <th>Roll</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each skills as |skill|}}
+          <tr>
+            <td>{{skill.label}}</td>
+            <td>
+              <input type="number" name="system.skills.{{skill.key}}" value="{{skill.value}}" />
+            </td>
+            <td>
+              <button type="button" data-action="skill-roll" data-skill="{{skill.key}}">Roll</button>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
+
+  <footer class="sheet-footer">
+    <button type="button" data-action="ranged-attack">Ranged Attack</button>
+    <button type="button" data-action="close-opposed">Close Combat Opposed</button>
+  </footer>
+</form>
