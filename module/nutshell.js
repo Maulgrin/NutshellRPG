@@ -109,7 +109,7 @@ class NutshellCharacterData extends foundry.abstract.TypeDataModel {
 class NutshellActor extends Actor {
   prepareDerivedData() {
     super.prepareDerivedData();
-    if (this.type !== "character") return;
+    if (!["character", "npc"].includes(this.type)) return;
 
     const endurance = Number(this.system.skills?.endurance ?? 0);
     const taken = Math.max(0, Number(this.system.strikes?.taken ?? 0));
@@ -120,10 +120,10 @@ class NutshellActor extends Actor {
   }
 }
 
-class NutshellCharacterSheet extends ActorSheet {
+class NutshellActorSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["nutshell", "sheet", "actor", "character"],
+      classes: ["nutshell", "sheet", "actor"],
       width: 760,
       height: 740,
       submitOnChange: true,
@@ -183,10 +183,11 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = NutshellActor;
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
   CONFIG.Actor.dataModels.character = NutshellCharacterData;
+  CONFIG.Actor.dataModels.npc = NutshellCharacterData;
 
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("nutshell", NutshellCharacterSheet, {
-    types: ["character"],
+  Actors.registerSheet("nutshell", NutshellActorSheet, {
+    types: ["character", "npc"],
     makeDefault: true
   });
 });

@@ -23,7 +23,8 @@
   ],
   "documentTypes": {
     "Actor": {
-      "character": {}
+      "character": {},
+      "npc": {}
     }
   },
   "packs": [
@@ -32,6 +33,14 @@
       "type": "JournalEntry",
       "name": "reference-charts",
       "path": "packs/reference-charts.db",
+      "system": "nutshell",
+      "package": "system"
+    },
+    {
+      "label": "NPC Templates",
+      "type": "Actor",
+      "name": "npc-templates",
+      "path": "packs/npc-templates",
       "system": "nutshell",
       "package": "system"
     }

@@ -1,0 +1,24 @@
+{
+  "name": "Beast",
+  "type": "npc",
+  "system": {
+    "strikes": {
+      "taken": 0
+    },
+    "powerTheme": "",
+    "gear": "Claws and fangs",
+    "skills": {
+      "closeCombat": 3,
+      "rangedCombat": 0,
+      "perception": 2,
+      "survival": 2,
+      "endurance": 3,
+      "fitness": 2,
+      "persuasion": -1,
+      "expertise": 0,
+      "power": 0,
+      "skulduggery": 0,
+      "operate": 0
+    }
+  }
+}

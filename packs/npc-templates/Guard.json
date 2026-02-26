@@ -1,0 +1,24 @@
+{
+  "name": "Guard",
+  "type": "npc",
+  "system": {
+    "strikes": {
+      "taken": 0
+    },
+    "powerTheme": "",
+    "gear": "Spear, shield, chain shirt",
+    "skills": {
+      "closeCombat": 2,
+      "rangedCombat": 0,
+      "perception": 2,
+      "survival": 1,
+      "endurance": 2,
+      "fitness": 1,
+      "persuasion": 1,
+      "expertise": 0,
+      "power": 0,
+      "skulduggery": 0,
+      "operate": 0
+    }
+  }
+}
