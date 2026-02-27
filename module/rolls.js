@@ -61,10 +61,18 @@ function buildRollCard({ title, roll, modifier, total, targetNumber, success, di
 
 async function postRollCard(actor, data) {
   const content = buildRollCard(data);
-  return ChatMessage.create({
+  const messageData = {
     speaker: ChatMessage.getSpeaker({ actor }),
     content
-  });
+  };
+
+  if (data.roll instanceof Roll) {
+    messageData.rolls = [data.roll];
+    messageData.style = CONST?.CHAT_MESSAGE_STYLES?.ROLL;
+    messageData.sound = CONFIG?.sounds?.dice;
+  }
+
+  return ChatMessage.create(messageData);
 }
 
 async function promptForNumber({ title, label, defaultValue }) {
