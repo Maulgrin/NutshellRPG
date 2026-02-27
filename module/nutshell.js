@@ -51,6 +51,24 @@ const REFERENCE_CHARTS = [
 <tr><td>5&ndash;7</td><td>3 Strikes</td></tr>
 <tr><td>8+</td><td>4 Strikes</td></tr>
 </table>`
+  },
+  {
+    name: "Skill Descriptions",
+    content: `<h2>Skill Descriptions</h2>
+<ul>
+<li><strong>Close Combat</strong> - Melee weapon and unarmed combat ability</li>
+<li><strong>Ranged Combat</strong> - Any ranged combat</li>
+<li><strong>Perception</strong> - Awareness of surroundings</li>
+<li><strong>Survival</strong> - Operate and thrive within an environment (resource gathering, tracking, etc.)</li>
+<li><strong>Endurance</strong> - Resist toxins and exertion</li>
+<li><strong>Fitness</strong> - Swimming, climbing, jumping, sprinting, lifting, etc.</li>
+<li><strong>Persuasion</strong> - Social, convince, seduce, negotiate</li>
+<li><strong>Expertise</strong> - Build and repair things, applied knowledge</li>
+<li><strong>Power</strong> - Willpower and morale, also magic if appropriate</li>
+<li><strong>Skulduggery</strong> - Stealth, lock picking, sleight of hand and similar things</li>
+<li><strong>Operate</strong> - Ride a horse, drive a carriage, vehicle, airplane, space craft</li>
+</ul>
+<p><strong>The Power Skill and Magic:</strong> If appropriate to the type of game the table has agreed on, pick a magical or magic-like theme for your Power Skill (nature, fire, telekinesis, divine, etc.).</p>`
   }
 ];
 

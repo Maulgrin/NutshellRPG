@@ -553,6 +553,18 @@
   margin-bottom: 1em;
 }
 
+.nutshell-sheet select.theme-selector,
+.nutshell-sheet[data-theme] select.theme-selector {
+  color: #1b140d;
+  background: linear-gradient(180deg, #efe6cf 0%, #d9c79f 100%);
+  border-color: #6f5432;
+}
+
+.nutshell-sheet select.theme-selector option {
+  color: #1b140d;
+  background: #e6d8b9;
+}
+
 .nutshell-sheet .skills-grid {
   display: grid;
   gap: 8px;
