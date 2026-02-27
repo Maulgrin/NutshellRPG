@@ -12,6 +12,11 @@ const SKILL_FIELDS = [
   { key: "operate", label: "Operate" }
 ];
 
+const SHEET_THEMES = {
+  STEAMPUNK: "steampunk",
+  MATRIX: "matrix"
+};
+
 const REFERENCE_CHARTS = [
   {
     name: "Target Number Chart",
@@ -138,7 +143,11 @@ class NutshellActorSheet extends ActorSheet {
 
   async getData(options = {}) {
     const context = await super.getData(options);
+    const currentTheme = game.settings?.get("nutshell", "sheetTheme") ?? SHEET_THEMES.STEAMPUNK;
+    const nextTheme = currentTheme === SHEET_THEMES.MATRIX ? SHEET_THEMES.STEAMPUNK : SHEET_THEMES.MATRIX;
     context.system = this.actor.system;
+    context.sheetTheme = currentTheme;
+    context.themeToggleLabel = nextTheme === SHEET_THEMES.MATRIX ? "Switch to Matrix" : "Switch to Steampunk";
     context.skills = SKILL_FIELDS.map(({ key, label }) => ({
       key,
       label,
@@ -153,6 +162,7 @@ class NutshellActorSheet extends ActorSheet {
     html.find('[data-action="skill-roll"]').on("click", this._onSkillRoll.bind(this));
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));
+    html.find('[data-action="toggle-theme"]').on("click", this._onToggleTheme.bind(this));
   }
 
   async _onSkillRoll(event) {
@@ -176,10 +186,31 @@ class NutshellActorSheet extends ActorSheet {
     if (!roller) return ui.notifications.error("Nutshell roll helpers are unavailable.");
     await roller(this.actor);
   }
+
+  async _onToggleTheme(event) {
+    event.preventDefault();
+    const currentTheme = game.settings?.get("nutshell", "sheetTheme") ?? SHEET_THEMES.STEAMPUNK;
+    const nextTheme = currentTheme === SHEET_THEMES.MATRIX ? SHEET_THEMES.STEAMPUNK : SHEET_THEMES.MATRIX;
+    await game.settings.set("nutshell", "sheetTheme", nextTheme);
+    this.render(true);
+  }
 }
 
 Hooks.once("init", () => {
   game.nutshell = game.nutshell || {};
+  game.settings.register("nutshell", "sheetTheme", {
+    name: "Nutshell Sheet Theme",
+    hint: "Visual theme used by Nutshell actor sheets.",
+    scope: "client",
+    config: false,
+    type: String,
+    choices: {
+      [SHEET_THEMES.STEAMPUNK]: "Steampunk",
+      [SHEET_THEMES.MATRIX]: "Matrix"
+    },
+    default: SHEET_THEMES.STEAMPUNK
+  });
+
   CONFIG.Actor.documentClass = NutshellActor;
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
   CONFIG.Actor.dataModels.character = NutshellCharacterData;

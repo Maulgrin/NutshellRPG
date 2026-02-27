@@ -1,8 +1,8 @@
-<form class="{{cssClass}} nutshell-sheet flexcol" autocomplete="off">
+<form class="{{cssClass}} nutshell-sheet flexcol" autocomplete="off" data-theme="{{sheetTheme}}">
   <section class="top-layout">
     <div class="primary-column">
       <header class="sheet-header">
-        <label for="actor-name">Name</label>
+        <label for="actor-name">NAME :</label>
         <input id="actor-name" type="text" name="name" value="{{actor.name}}" />
       </header>
 
@@ -13,6 +13,7 @@
     </div>
 
     <section class="sheet-section strikes-section">
+      <button type="button" class="theme-switch-button" data-action="toggle-theme">{{themeToggleLabel}}</button>
       <h2>Strikes</h2>
       <div class="strikes-grid">
         <label>

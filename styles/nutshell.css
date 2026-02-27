@@ -1,43 +1,136 @@
 .nutshell-sheet {
-  color: #000;
-  background: #fff;
-  padding: 12px;
+  --ink: #20170f;
+  --ink-soft: #3b2a1b;
+  --parchment: #f2e6c8;
+  --parchment-dark: #dcc297;
+  --brass: #b88b3b;
+  --brass-deep: #8d652b;
+  --copper: #875533;
+  --steel: #6f665b;
+  --shadow: rgba(19, 10, 5, 0.45);
+
+  position: relative;
+  overflow: hidden;
+  color: var(--ink);
+  padding: 14px;
   gap: 12px;
+  border: 2px solid var(--brass);
+  box-shadow: inset 0 0 0 1px #e4c786, 0 8px 24px var(--shadow);
+  font-family: "IM FELL English", "Cinzel", "Garamond", "Book Antiqua", serif;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 248, 225, 0.2) 0%, rgba(255, 248, 225, 0) 36%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.03) 0 10px,
+      rgba(64, 40, 24, 0.07) 10px 20px
+    ),
+    linear-gradient(150deg, #3a281b 0%, #5a3d28 35%, #24180f 100%);
+}
+
+.nutshell-sheet::before,
+.nutshell-sheet::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0.2;
+}
+
+.nutshell-sheet::before {
+  width: 210px;
+  height: 210px;
+  right: -80px;
+  top: -70px;
+  background:
+    radial-gradient(circle at center, transparent 0 33px, rgba(235, 191, 109, 0.8) 33px 44px, transparent 44px),
+    repeating-conic-gradient(from 0deg, rgba(235, 191, 109, 0.7) 0deg 9deg, transparent 9deg 18deg);
+  animation: gear-turn 24s linear infinite;
+}
+
+.nutshell-sheet::after {
+  width: 150px;
+  height: 150px;
+  left: -40px;
+  bottom: -55px;
+  background:
+    radial-gradient(circle at center, transparent 0 24px, rgba(188, 138, 82, 0.85) 24px 34px, transparent 34px),
+    repeating-conic-gradient(from 0deg, rgba(188, 138, 82, 0.7) 0deg 10deg, transparent 10deg 20deg);
+  animation: gear-turn-reverse 18s linear infinite;
+}
+
+.nutshell-sheet > * {
+  animation: panel-rise 460ms ease both;
+}
+
+.nutshell-sheet > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.nutshell-sheet > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.nutshell-sheet > *:nth-child(4) {
+  animation-delay: 180ms;
 }
 
 .nutshell-sheet .sheet-header,
 .nutshell-sheet .sheet-section,
 .nutshell-sheet .sheet-footer {
-  border: 1px solid #000;
+  position: relative;
+  border: 2px solid var(--brass-deep);
+  box-shadow: inset 0 0 0 1px #efcc89, 0 2px 8px rgba(35, 20, 10, 0.2);
   padding: 10px;
-  background: #fff;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 242, 0.78) 0%, rgba(236, 220, 184, 0.86) 100%);
+}
+
+.nutshell-sheet .sheet-header::before,
+.nutshell-sheet .sheet-section::before,
+.nutshell-sheet .sheet-footer::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(105, 67, 34, 0.55);
+  pointer-events: none;
+}
+
+.nutshell-sheet h2 {
+  margin: 0 0 8px;
+  color: #5a381c;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-family: "Cinzel", "Garamond", "Book Antiqua", serif;
+  border-bottom: 1px solid rgba(90, 56, 28, 0.45);
+  padding-bottom: 4px;
 }
 
 .nutshell-sheet label {
   display: grid;
   gap: 4px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--ink-soft);
 }
 
 .nutshell-sheet input,
 .nutshell-sheet textarea,
 .nutshell-sheet button {
   font: inherit;
-  color: #000;
 }
 
 .nutshell-sheet input,
 .nutshell-sheet textarea {
   width: 100%;
-  border: 1px solid #000;
-  background: #fff;
-  padding: 4px 6px;
+  border: 1px solid #7b572f;
+  color: var(--ink);
+  background: linear-gradient(180deg, #f7efd8 0%, #e8d8b2 100%);
+  padding: 5px 7px;
 }
 
-.nutshell-sheet .strikes-grid {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.nutshell-sheet input[readonly] {
+  background: linear-gradient(180deg, #ecdfc3 0%, #dfc797 100%);
+  color: #4d3824;
 }
 
 .nutshell-sheet .top-layout {
@@ -52,10 +145,160 @@
   align-content: start;
 }
 
+.nutshell-sheet .strikes-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nutshell-sheet .strikes-grid label {
+  padding: 6px;
+  border: 1px solid rgba(123, 87, 47, 0.5);
+  background: rgba(245, 232, 197, 0.7);
+}
+
 .nutshell-sheet button {
-  border: 1px solid #000;
-  background: #fff;
-  padding: 4px 8px;
+  border: 1px solid #5b3e20;
+  color: #2b1b0d;
+  background: linear-gradient(180deg, #deb870 0%, #ba863f 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 230, 169, 0.6), 0 1px 3px rgba(34, 20, 10, 0.35);
+  padding: 5px 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.nutshell-sheet button:hover,
+.nutshell-sheet button:focus {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+
+.nutshell-sheet[data-theme="matrix"] {
+  --ink: #b9ffb9;
+  --ink-soft: #8dff8d;
+  --brass: #1fa74d;
+  --brass-deep: #0f6d31;
+  --shadow: rgba(0, 0, 0, 0.65);
+  isolation: isolate;
+  border-color: #25ca5f;
+  box-shadow: inset 0 0 0 1px rgba(122, 255, 122, 0.3), 0 8px 24px var(--shadow);
+  font-family: "Share Tech Mono", "Consolas", "Lucida Console", monospace;
+  background:
+    linear-gradient(180deg, rgba(15, 80, 15, 0.08) 0%, rgba(0, 0, 0, 0) 65%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(86, 255, 114, 0.08) 0 1px,
+      rgba(0, 0, 0, 0) 1px 4px
+    ),
+    linear-gradient(150deg, #020b03 0%, #031607 50%, #000500 100%);
+}
+
+.nutshell-sheet[data-theme="matrix"]::before,
+.nutshell-sheet[data-theme="matrix"]::after {
+  border-radius: 0;
+  opacity: 0.22;
+  z-index: 0;
+  animation: matrix-drift 14s linear infinite;
+}
+
+.nutshell-sheet[data-theme="matrix"]::before {
+  width: 25%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background:
+    linear-gradient(90deg, rgba(20, 104, 42, 0.45) 0%, rgba(8, 44, 17, 0.25) 72%, rgba(0, 0, 0, 0) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(136, 255, 149, 0.02) 0 5px,
+      rgba(136, 255, 149, 0.32) 5px 6px,
+      rgba(0, 0, 0, 0) 6px 10px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(165, 255, 178, 0.95) 0 2px,
+      rgba(165, 255, 178, 0.38) 2px 5px,
+      rgba(0, 0, 0, 0) 5px 11px
+    );
+  background-size: 100% 100%, 100% 100%, 100% 160px;
+  opacity: 0.45;
+  animation: matrix-rain 6.8s linear infinite;
+}
+
+.nutshell-sheet[data-theme="matrix"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nutshell-sheet[data-theme="matrix"]::after {
+  width: 180px;
+  height: 180px;
+  left: -40px;
+  bottom: -40px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(136, 255, 149, 0.2) 0 2px,
+      rgba(0, 0, 0, 0) 2px 8px
+    ),
+    linear-gradient(90deg, rgba(136, 255, 149, 0.28) 0%, rgba(0, 0, 0, 0) 85%);
+  animation-direction: reverse;
+  animation-duration: 7s;
+}
+
+.nutshell-sheet[data-theme="matrix"] .sheet-header,
+.nutshell-sheet[data-theme="matrix"] .sheet-section,
+.nutshell-sheet[data-theme="matrix"] .sheet-footer {
+  border-color: #147338;
+  box-shadow: inset 0 0 0 1px rgba(123, 255, 145, 0.25), 0 2px 8px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(8, 35, 10, 0.9) 0%, rgba(4, 20, 8, 0.92) 100%);
+}
+
+.nutshell-sheet[data-theme="matrix"] .sheet-header::before,
+.nutshell-sheet[data-theme="matrix"] .sheet-section::before,
+.nutshell-sheet[data-theme="matrix"] .sheet-footer::before {
+  border-color: rgba(119, 255, 143, 0.35);
+}
+
+.nutshell-sheet[data-theme="matrix"] h2 {
+  color: #8eff8e;
+  border-bottom-color: rgba(142, 255, 142, 0.35);
+}
+
+.nutshell-sheet[data-theme="matrix"] label {
+  color: #92ff92;
+}
+
+.nutshell-sheet[data-theme="matrix"] input,
+.nutshell-sheet[data-theme="matrix"] textarea {
+  border-color: #1a8a41;
+  color: #c3ffc3;
+  background: linear-gradient(180deg, rgba(5, 27, 8, 0.95) 0%, rgba(3, 16, 6, 0.98) 100%);
+}
+
+.nutshell-sheet[data-theme="matrix"] input[readonly] {
+  color: #9ef59e;
+  background: linear-gradient(180deg, rgba(7, 33, 11, 0.95) 0%, rgba(5, 22, 9, 0.98) 100%);
+}
+
+.nutshell-sheet[data-theme="matrix"] .strikes-grid label,
+.nutshell-sheet[data-theme="matrix"] .skill-item {
+  border-color: rgba(54, 183, 91, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(122, 255, 136, 0.12);
+  background: linear-gradient(180deg, rgba(8, 30, 10, 0.92) 0%, rgba(3, 16, 6, 0.95) 100%);
+}
+
+.nutshell-sheet[data-theme="matrix"] button {
+  border-color: #23a651;
+  color: #c7ffc7;
+  background: linear-gradient(180deg, #12622d 0%, #0c401d 100%);
+  box-shadow: inset 0 1px 0 rgba(130, 255, 152, 0.25), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.nutshell-sheet[data-theme="matrix"] button:hover,
+.nutshell-sheet[data-theme="matrix"] button:focus {
+  filter: brightness(1.18);
 }
 
 .nutshell-sheet .sheet-footer {
@@ -68,6 +311,10 @@
   width: 100%;
 }
 
+.nutshell-sheet .theme-switch-button {
+  margin-bottom: 1em;
+}
+
 .nutshell-sheet .skills-grid {
   display: grid;
   gap: 8px;
@@ -75,7 +322,9 @@
 }
 
 .nutshell-sheet .skill-item {
-  border: 1px solid #000;
+  border: 1px solid #8f6938;
+  background: linear-gradient(180deg, rgba(247, 237, 212, 0.84) 0%, rgba(229, 208, 164, 0.9) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 236, 187, 0.55);
   padding: 8px;
   display: grid;
   gap: 6px;
@@ -84,51 +333,44 @@
 }
 
 .nutshell-sheet .skill-item label {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .nutshell-sheet .skill-item input {
   width: 100%;
 }
 
-@media (max-width: 700px) {
-  .nutshell-sheet .top-layout,
-  .nutshell-sheet .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nutshell-sheet .skill-item {
-    grid-template-columns: 1fr;
-  }
-}
-
 .nutshell-chat-card {
-  color: #000;
+  color: var(--ink);
 }
 
 .nutshell-chat-card h3 {
   margin: 0 0 8px;
+  color: #5a381c;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .nutshell-chat-table {
   width: 100%;
   border-collapse: collapse;
+  background: linear-gradient(180deg, #f3e8cb 0%, #e4cf9f 100%);
 }
 
 .nutshell-chat-table th,
 .nutshell-chat-table td {
-  border: 1px solid #000;
+  border: 1px solid #6d4a28;
   padding: 4px 6px;
   text-align: left;
 }
 
 .nutshell-result-success {
-  color: #008000;
+  color: #0c7d21;
   font-weight: 700;
 }
 
 .nutshell-result-failure {
-  color: #c00000;
+  color: #a11717;
   font-weight: 700;
 }
 
@@ -139,7 +381,80 @@ table {
 
 th,
 td {
-  border: 1px solid #000;
+  border: 1px solid #6d4a28;
   padding: 4px;
   text-align: center;
+}
+
+@media (max-width: 860px) {
+  .nutshell-sheet .top-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .nutshell-sheet .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nutshell-sheet .skill-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nutshell-sheet > *,
+  .nutshell-sheet::before,
+  .nutshell-sheet::after,
+  .nutshell-sheet button {
+    animation: none;
+    transition: none;
+  }
+}
+
+@keyframes panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gear-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gear-turn-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes matrix-drift {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes matrix-rain {
+  from {
+    background-position: 0 0, 0 0, 0 -160px;
+  }
+  to {
+    background-position: 0 0, 0 0, 0 0;
+  }
 }
