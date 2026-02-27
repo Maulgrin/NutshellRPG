@@ -13,7 +13,12 @@
     </div>
 
     <section class="sheet-section strikes-section">
-      <button type="button" class="theme-switch-button" data-action="toggle-theme">{{themeToggleLabel}}</button>
+      <label class="theme-selector-wrap" for="theme-selector">Theme</label>
+      <select id="theme-selector" class="theme-selector" data-action="select-theme">
+        {{#each themeOptions as |theme|}}
+          <option value="{{theme.value}}" {{#if theme.selected}}selected{{/if}}>{{theme.label}}</option>
+        {{/each}}
+      </select>
       <h2>Strikes</h2>
       <div class="strikes-grid">
         <label>

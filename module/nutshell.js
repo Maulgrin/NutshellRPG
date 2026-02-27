@@ -14,7 +14,14 @@ const SKILL_FIELDS = [
 
 const SHEET_THEMES = {
   STEAMPUNK: "steampunk",
-  MATRIX: "matrix"
+  MATRIX: "matrix",
+  SCIFI: "scifi"
+};
+
+const SHEET_THEME_LABELS = {
+  [SHEET_THEMES.STEAMPUNK]: "Steampunk",
+  [SHEET_THEMES.MATRIX]: "Matrix",
+  [SHEET_THEMES.SCIFI]: "Sci-Fi"
 };
 
 const REFERENCE_CHARTS = [
@@ -144,10 +151,13 @@ class NutshellActorSheet extends ActorSheet {
   async getData(options = {}) {
     const context = await super.getData(options);
     const currentTheme = game.settings?.get("nutshell", "sheetTheme") ?? SHEET_THEMES.STEAMPUNK;
-    const nextTheme = currentTheme === SHEET_THEMES.MATRIX ? SHEET_THEMES.STEAMPUNK : SHEET_THEMES.MATRIX;
     context.system = this.actor.system;
     context.sheetTheme = currentTheme;
-    context.themeToggleLabel = nextTheme === SHEET_THEMES.MATRIX ? "Switch to Matrix" : "Switch to Steampunk";
+    context.themeOptions = Object.entries(SHEET_THEME_LABELS).map(([value, label]) => ({
+      value,
+      label,
+      selected: value === currentTheme
+    }));
     context.skills = SKILL_FIELDS.map(({ key, label }) => ({
       key,
       label,
@@ -162,7 +172,7 @@ class NutshellActorSheet extends ActorSheet {
     html.find('[data-action="skill-roll"]').on("click", this._onSkillRoll.bind(this));
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));
-    html.find('[data-action="toggle-theme"]').on("click", this._onToggleTheme.bind(this));
+    html.find('[data-action="select-theme"]').on("change", this._onThemeChange.bind(this));
   }
 
   async _onSkillRoll(event) {
@@ -187,11 +197,13 @@ class NutshellActorSheet extends ActorSheet {
     await roller(this.actor);
   }
 
-  async _onToggleTheme(event) {
-    event.preventDefault();
+  async _onThemeChange(event) {
     const currentTheme = game.settings?.get("nutshell", "sheetTheme") ?? SHEET_THEMES.STEAMPUNK;
-    const nextTheme = currentTheme === SHEET_THEMES.MATRIX ? SHEET_THEMES.STEAMPUNK : SHEET_THEMES.MATRIX;
-    await game.settings.set("nutshell", "sheetTheme", nextTheme);
+    const selectedTheme = String(event.currentTarget?.value ?? currentTheme);
+    if (!Object.values(SHEET_THEMES).includes(selectedTheme)) return;
+    if (selectedTheme === currentTheme) return;
+
+    await game.settings.set("nutshell", "sheetTheme", selectedTheme);
     this.render(true);
   }
 }
@@ -204,10 +216,7 @@ Hooks.once("init", () => {
     scope: "client",
     config: false,
     type: String,
-    choices: {
-      [SHEET_THEMES.STEAMPUNK]: "Steampunk",
-      [SHEET_THEMES.MATRIX]: "Matrix"
-    },
+    choices: SHEET_THEME_LABELS,
     default: SHEET_THEMES.STEAMPUNK
   });
 
