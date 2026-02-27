@@ -419,6 +419,120 @@
   filter: brightness(1.12);
 }
 
+.nutshell-sheet[data-theme="cthulhu"] {
+  --ink: #e7dfc7;
+  --ink-soft: #c7bca1;
+  --brass: #7d6d4f;
+  --brass-deep: #4e4734;
+  --shadow: rgba(3, 2, 1, 0.82);
+  isolation: isolate;
+  border-color: #7a6b4c;
+  box-shadow: inset 0 0 0 1px rgba(204, 188, 146, 0.24), 0 10px 26px var(--shadow);
+  font-family: "Cormorant Garamond", "Garamond", "Book Antiqua", serif;
+  background:
+    radial-gradient(circle at 80% 12%, rgba(92, 124, 84, 0.14) 0%, rgba(92, 124, 84, 0) 34%),
+    linear-gradient(165deg, rgba(18, 14, 10, 0.5) 0%, rgba(16, 11, 8, 0.62) 56%, rgba(10, 8, 6, 0.74) 100%),
+    url("../assets/CoCinvestigate.png") center / cover no-repeat;
+  background-blend-mode: screen, multiply, normal;
+}
+
+.nutshell-sheet[data-theme="cthulhu"]::before,
+.nutshell-sheet[data-theme="cthulhu"]::after {
+  border-radius: 0;
+  z-index: 0;
+}
+
+.nutshell-sheet[data-theme="cthulhu"]::before {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0.34;
+  background:
+    radial-gradient(circle at 18% 74%, rgba(103, 143, 98, 0.32) 0%, rgba(21, 36, 19, 0) 38%),
+    radial-gradient(circle at 72% 30%, rgba(76, 108, 70, 0.2) 0%, rgba(19, 28, 16, 0) 44%),
+    repeating-linear-gradient(
+      -22deg,
+      rgba(124, 150, 111, 0.07) 0 1px,
+      rgba(0, 0, 0, 0) 1px 15px
+    );
+  mix-blend-mode: screen;
+  animation: cthulhu-mist 12s ease-in-out infinite alternate;
+}
+
+.nutshell-sheet[data-theme="cthulhu"]::after {
+  width: 190px;
+  height: 190px;
+  right: -40px;
+  bottom: -24px;
+  opacity: 0.5;
+  background:
+    radial-gradient(circle at center, transparent 0 30px, rgba(118, 155, 102, 0.52) 30px 34px, transparent 34px),
+    radial-gradient(circle at center, transparent 0 60px, rgba(118, 155, 102, 0.3) 60px 63px, transparent 63px);
+  mix-blend-mode: screen;
+  animation: cthulhu-sigil 6.4s ease-in-out infinite;
+}
+
+.nutshell-sheet[data-theme="cthulhu"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nutshell-sheet[data-theme="cthulhu"] .sheet-header,
+.nutshell-sheet[data-theme="cthulhu"] .sheet-section,
+.nutshell-sheet[data-theme="cthulhu"] .sheet-footer {
+  border-color: #6b6043;
+  box-shadow: inset 0 0 0 1px rgba(184, 168, 128, 0.2), 0 2px 10px rgba(0, 0, 0, 0.52);
+  background: linear-gradient(180deg, rgba(24, 18, 12, 0.74) 0%, rgba(15, 12, 9, 0.8) 100%);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] .sheet-header::before,
+.nutshell-sheet[data-theme="cthulhu"] .sheet-section::before,
+.nutshell-sheet[data-theme="cthulhu"] .sheet-footer::before {
+  border-color: rgba(170, 153, 111, 0.35);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] h2 {
+  color: #d9cfb1;
+  border-bottom-color: rgba(156, 178, 132, 0.35);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] label {
+  color: #cbbf9f;
+}
+
+.nutshell-sheet[data-theme="cthulhu"] input,
+.nutshell-sheet[data-theme="cthulhu"] textarea,
+.nutshell-sheet[data-theme="cthulhu"] select {
+  border-color: #786a4b;
+  color: #e7dfc7;
+  background: linear-gradient(180deg, rgba(25, 19, 13, 0.94) 0%, rgba(17, 13, 10, 0.95) 100%);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] input[readonly] {
+  color: #d9cfb6;
+  background: linear-gradient(180deg, rgba(36, 28, 18, 0.93) 0%, rgba(22, 17, 12, 0.95) 100%);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] .strikes-grid label,
+.nutshell-sheet[data-theme="cthulhu"] .skill-item {
+  border-color: rgba(108, 123, 82, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(156, 181, 121, 0.14);
+  background: linear-gradient(180deg, rgba(30, 23, 16, 0.88) 0%, rgba(17, 13, 10, 0.92) 100%);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] button {
+  border-color: #6d8256;
+  color: #efe5ce;
+  background: linear-gradient(180deg, #556a43 0%, #3b4d31 100%);
+  box-shadow: inset 0 1px 0 rgba(188, 207, 152, 0.26), 0 1px 4px rgba(0, 0, 0, 0.54);
+}
+
+.nutshell-sheet[data-theme="cthulhu"] button:hover,
+.nutshell-sheet[data-theme="cthulhu"] button:focus {
+  filter: brightness(1.11);
+}
+
 .nutshell-sheet .sheet-footer {
   display: grid;
   gap: 8px;
@@ -601,5 +715,28 @@ td {
   50% {
     transform: scale(1.14);
     opacity: 0.86;
+  }
+}
+
+@keyframes cthulhu-mist {
+  from {
+    transform: translateX(-1.5%) translateY(-1%);
+    opacity: 0.26;
+  }
+  to {
+    transform: translateX(1.2%) translateY(1.6%);
+    opacity: 0.42;
+  }
+}
+
+@keyframes cthulhu-sigil {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.62;
   }
 }

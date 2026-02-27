@@ -15,13 +15,15 @@ const SKILL_FIELDS = [
 const SHEET_THEMES = {
   STEAMPUNK: "steampunk",
   MATRIX: "matrix",
-  SCIFI: "scifi"
+  SCIFI: "scifi",
+  CTHULHU: "cthulhu"
 };
 
 const SHEET_THEME_LABELS = {
   [SHEET_THEMES.STEAMPUNK]: "Steampunk",
   [SHEET_THEMES.MATRIX]: "Matrix",
-  [SHEET_THEMES.SCIFI]: "Sci-Fi"
+  [SHEET_THEMES.SCIFI]: "Sci-Fi",
+  [SHEET_THEMES.CTHULHU]: "Cthulhu"
 };
 
 const REFERENCE_CHARTS = [
