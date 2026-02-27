@@ -42,6 +42,7 @@ function getDiceDisplay(roll) {
 
 function buildRollCard({ title, roll, modifier, total, targetNumber, success, difference, strikes }) {
   const outcome = success ? "Success" : "Failure";
+  const outcomeClass = success ? "nutshell-result-success" : "nutshell-result-failure";
   return `
     <section class="nutshell-chat-card">
       <h3>${title}</h3>
@@ -50,7 +51,7 @@ function buildRollCard({ title, roll, modifier, total, targetNumber, success, di
         <tr><th>Modifier</th><td>${formatDifference(modifier)}</td></tr>
         <tr><th>Total</th><td>${total}</td></tr>
         <tr><th>TN</th><td>${targetNumber}</td></tr>
-        <tr><th>Result</th><td>${outcome}</td></tr>
+        <tr><th>Result</th><td><strong class="${outcomeClass}">${outcome}</strong></td></tr>
         <tr><th>Difference</th><td>${formatDifference(difference)}</td></tr>
         ${typeof strikes === "number" ? `<tr><th>Strikes</th><td>${strikes}</td></tr>` : ""}
       </table>
