@@ -1,3 +1,8 @@
+.window-app.nutshell.sheet.actor {
+  min-width: 586px;
+  min-height: 586px;
+}
+
 .nutshell-sheet {
   --ink: #20170f;
   --ink-soft: #3b2a1b;

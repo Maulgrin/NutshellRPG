@@ -25,6 +25,8 @@ const SHEET_THEME_LABELS = {
   [SHEET_THEMES.SCIFI]: "Sci-Fi",
   [SHEET_THEMES.CTHULHU]: "Cthulhu"
 };
+const MIN_SHEET_WIDTH = 586;
+const MIN_SHEET_HEIGHT = 586;
 
 const REFERENCE_CHARTS = [
   {
@@ -158,10 +160,28 @@ class NutshellActorSheet extends ActorSheet {
       classes: ["nutshell", "sheet", "actor"],
       width: 760,
       height: 740,
+      minWidth: MIN_SHEET_WIDTH,
+      minHeight: MIN_SHEET_HEIGHT,
       submitOnChange: true,
       submitOnClose: true,
       resizable: true
     });
+  }
+
+  setPosition(position = {}) {
+    const nextPosition = { ...position };
+    const currentWidth = Number(nextPosition.width ?? this.position?.width ?? this.options?.width);
+    const currentHeight = Number(nextPosition.height ?? this.position?.height ?? this.options?.height);
+
+    if (Number.isFinite(currentWidth)) {
+      nextPosition.width = Math.max(MIN_SHEET_WIDTH, currentWidth);
+    }
+
+    if (Number.isFinite(currentHeight)) {
+      nextPosition.height = Math.max(MIN_SHEET_HEIGHT, currentHeight);
+    }
+
+    return super.setPosition(nextPosition);
   }
 
   get template() {
