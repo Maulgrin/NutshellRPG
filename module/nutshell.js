@@ -28,11 +28,17 @@ const SHEET_THEME_LABELS = {
   [SHEET_THEMES.WESTERN]: "Western"
 };
 const MIN_SHEET_WIDTH = 586;
-const MIN_SHEET_HEIGHT = 586;
+const MIN_SHEET_HEIGHT = 877;
 const SKILL_VALUE_MIN = -2;
 const SKILL_VALUE_MAX = 3;
 const SKILL_SUM_TARGET = 5;
 const SKILL_NEGATIVE_MIN_TOTAL = -3;
+const SKILL_NEGATIVE_MAGNITUDE_LIMIT = Math.abs(SKILL_NEGATIVE_MIN_TOTAL);
+const SKILL_ACTIONS_LOCK_FLAG = "skillActionsLocked";
+const SKILL_CANDIDATE_VALUES = Array.from(
+  { length: SKILL_VALUE_MAX - SKILL_VALUE_MIN + 1 },
+  (_, index) => SKILL_VALUE_MIN + index
+);
 
 function normalizeSkillValue(value) {
   const numeric = Number(value);
@@ -70,6 +76,74 @@ function evaluateSkillValidation(skills = {}) {
     negativeTotalValid: negativeTotal >= SKILL_NEGATIVE_MIN_TOTAL,
     rangeValid
   };
+}
+
+function shuffledCopy(values) {
+  const copy = [...values];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+function generateRandomSkills() {
+  const keys = SKILL_FIELDS.map((skill) => skill.key);
+  const memo = new Map();
+
+  const canReach = (index, remainingSum, usedNegativeMagnitude) => {
+    const stateKey = `${index}|${remainingSum}|${usedNegativeMagnitude}`;
+    if (memo.has(stateKey)) return memo.get(stateKey);
+
+    const remainingSlots = keys.length - index;
+    if (remainingSlots === 0) {
+      const solved = remainingSum === 0;
+      memo.set(stateKey, solved);
+      return solved;
+    }
+
+    const negativeBudgetLeft = Math.max(0, SKILL_NEGATIVE_MAGNITUDE_LIMIT - usedNegativeMagnitude);
+    const minPossible = -Math.min(remainingSlots * Math.abs(SKILL_VALUE_MIN), negativeBudgetLeft);
+    const maxPossible = remainingSlots * SKILL_VALUE_MAX;
+    if (remainingSum < minPossible || remainingSum > maxPossible) {
+      memo.set(stateKey, false);
+      return false;
+    }
+
+    for (const candidate of SKILL_CANDIDATE_VALUES) {
+      const nextNegativeMagnitude = usedNegativeMagnitude + Math.max(0, -candidate);
+      if (nextNegativeMagnitude > SKILL_NEGATIVE_MAGNITUDE_LIMIT) continue;
+      if (canReach(index + 1, remainingSum - candidate, nextNegativeMagnitude)) {
+        memo.set(stateKey, true);
+        return true;
+      }
+    }
+
+    memo.set(stateKey, false);
+    return false;
+  };
+
+  if (!canReach(0, SKILL_SUM_TARGET, 0)) return null;
+
+  const skills = {};
+  let remainingSum = SKILL_SUM_TARGET;
+  let usedNegativeMagnitude = 0;
+
+  for (let index = 0; index < keys.length; index += 1) {
+    const candidates = shuffledCopy(SKILL_CANDIDATE_VALUES).filter((candidate) => {
+      const nextNegativeMagnitude = usedNegativeMagnitude + Math.max(0, -candidate);
+      if (nextNegativeMagnitude > SKILL_NEGATIVE_MAGNITUDE_LIMIT) return false;
+      return canReach(index + 1, remainingSum - candidate, nextNegativeMagnitude);
+    });
+
+    if (!candidates.length) return null;
+    const selected = candidates[0];
+    skills[keys[index]] = selected;
+    remainingSum -= selected;
+    usedNegativeMagnitude += Math.max(0, -selected);
+  }
+
+  return skills;
 }
 
 const REFERENCE_CHARTS = [
@@ -265,6 +339,7 @@ class NutshellActorSheet extends ActorSheet {
       skillValues[skill.key] = skill.value;
     }
     context.skillValidation = evaluateSkillValidation(skillValues);
+    context.skillActionsLocked = this._getSkillActionsLocked();
     return context;
   }
 
@@ -274,9 +349,37 @@ class NutshellActorSheet extends ActorSheet {
     html.find('[data-action="skill-roll"]').on("click", this._onSkillRoll.bind(this));
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));
+    html.find('[data-action="reset-skills"]').on("click", this._onResetSkills.bind(this));
+    html.find('[data-action="random-skills"]').on("click", this._onRandomSkills.bind(this));
+    html.find('[data-action="toggle-skill-lock"]').on("change", this._onSkillActionsLockChange.bind(this));
     html.find('[data-action="select-theme"]').on("change", this._onThemeChange.bind(this));
     html.find('input[name^="system.skills."]').on("input", this._onSkillValueInput.bind(this));
+    this._setSkillActionButtonsDisabled(html, this._isSkillActionsLocked(html));
     this._refreshSkillValidationIndicator(html);
+  }
+
+  _getSkillActionsLocked() {
+    const stored = this.actor.getFlag("nutshell", SKILL_ACTIONS_LOCK_FLAG);
+    return stored === undefined ? true : Boolean(stored);
+  }
+
+  _isSkillActionsLocked(html = this.element) {
+    const lockInput = html?.find('[data-action="toggle-skill-lock"]');
+    if (lockInput?.length) return Boolean(lockInput.prop("checked"));
+    return this._getSkillActionsLocked();
+  }
+
+  _setSkillActionButtonsDisabled(html = this.element, locked = true) {
+    if (!html?.length) return;
+    html
+      .find('[data-action="reset-skills"], [data-action="random-skills"]')
+      .prop("disabled", Boolean(locked));
+  }
+
+  async _onSkillActionsLockChange(event) {
+    const locked = Boolean(event?.currentTarget?.checked);
+    await this.actor.setFlag("nutshell", SKILL_ACTIONS_LOCK_FLAG, locked);
+    this._setSkillActionButtonsDisabled(this.element, locked);
   }
 
   _getSkillValuesFromSheet(html = this.element) {
@@ -366,6 +469,50 @@ class NutshellActorSheet extends ActorSheet {
     }
 
     return data;
+  }
+
+  async _onResetSkills(event) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+    if (this._isSkillActionsLocked(this.element)) return;
+
+    const confirmed = await Dialog.confirm({
+      title: "Reset Skills",
+      content: "<p>Are you sure you want to reset all skills to 0?</p>",
+      yes: () => true,
+      no: () => false,
+      defaultYes: false
+    });
+
+    if (!confirmed) return;
+
+    const updateData = {};
+    for (const { key } of SKILL_FIELDS) {
+      updateData[`system.skills.${key}`] = 0;
+    }
+
+    await this.actor.update(updateData);
+    this.render(true);
+  }
+
+  async _onRandomSkills(event) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+    if (this._isSkillActionsLocked(this.element)) return;
+
+    const randomSkills = generateRandomSkills();
+    if (!randomSkills) {
+      ui.notifications.error("Unable to generate valid random skills.");
+      return;
+    }
+
+    const updateData = {};
+    for (const { key } of SKILL_FIELDS) {
+      updateData[`system.skills.${key}`] = randomSkills[key];
+    }
+
+    await this.actor.update(updateData);
+    this.render(true);
   }
 
   async _onSkillRoll(event) {

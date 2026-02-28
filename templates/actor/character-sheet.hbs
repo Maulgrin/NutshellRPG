@@ -55,9 +55,17 @@
           <button type="button" data-action="skill-roll" data-skill="{{skill.key}}">Roll</button>
         </div>
       {{/each}}
-      <p class="skill-validation skill-validation--under-skulduggery {{#if skillValidation.sumValid}}is-valid{{else}}is-invalid{{/if}}" data-skill-validation>
-        Skills <span class="skill-validation-icon" aria-hidden="true"></span>
-      </p>
+      <div class="skill-validation-row">
+        <button type="button" class="skill-action-button" data-action="reset-skills" {{#if skillActionsLocked}}disabled{{/if}}>RESET</button>
+        <button type="button" class="skill-action-button" data-action="random-skills" {{#if skillActionsLocked}}disabled{{/if}}>RANDOM</button>
+        <p class="skill-validation {{#if skillValidation.sumValid}}is-valid{{else}}is-invalid{{/if}}" data-skill-validation>
+          Skills <span class="skill-validation-icon" aria-hidden="true"></span>
+        </p>
+        <label class="skill-lock-toggle">
+          <input type="checkbox" data-action="toggle-skill-lock" {{#if skillActionsLocked}}checked{{/if}} />
+          <span>Lock</span>
+        </label>
+      </div>
     </div>
   </section>
 

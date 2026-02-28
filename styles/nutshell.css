@@ -1,6 +1,6 @@
 .window-app.nutshell.sheet.actor {
   min-width: 586px;
-  min-height: 586px;
+  min-height: 877px;
 }
 
 .nutshell-sheet {
@@ -755,20 +755,50 @@
   margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.86rem;
+  gap: 4px;
+  font-size: 0.72rem;
+  line-height: 1;
   font-weight: 700;
+  white-space: nowrap;
 }
 
-.nutshell-sheet .skill-validation--under-skulduggery {
+.nutshell-sheet .skill-validation-row {
   grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
   align-self: start;
   justify-self: start;
 }
 
+.nutshell-sheet .skill-action-button {
+  padding: 2px 6px;
+  min-height: 0;
+  line-height: 1.2;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+.nutshell-sheet .skill-lock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nutshell-sheet .skill-lock-toggle input[type="checkbox"] {
+  width: 0.72rem;
+  height: 0.72rem;
+  margin: 0;
+}
+
 .nutshell-sheet .skill-validation-icon {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: 0.85rem;
+  height: 0.85rem;
   display: inline-grid;
   place-items: center;
   border: 1px solid currentColor;
@@ -853,7 +883,7 @@ td {
     grid-template-columns: 1fr;
   }
 
-  .nutshell-sheet .skill-validation--under-skulduggery {
+  .nutshell-sheet .skill-validation-row {
     grid-column: 1;
   }
 }
