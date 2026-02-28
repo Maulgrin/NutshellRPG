@@ -575,6 +575,125 @@
   filter: brightness(1.11);
 }
 
+.nutshell-sheet[data-theme="western"] {
+  --ink: #2e1c11;
+  --ink-soft: #5f3c25;
+  --brass: #be8749;
+  --brass-deep: #7f542e;
+  --shadow: rgba(33, 16, 6, 0.6);
+  isolation: isolate;
+  border-color: #9a6436;
+  box-shadow: inset 0 0 0 1px rgba(228, 191, 135, 0.3), 0 10px 24px var(--shadow);
+  font-family: "Alegreya SC", "Bree Serif", "Georgia", serif;
+  background:
+    linear-gradient(170deg, rgba(67, 33, 14, 0.36) 0%, rgba(44, 22, 9, 0.5) 55%, rgba(27, 14, 7, 0.62) 100%),
+    radial-gradient(circle at 72% 18%, rgba(246, 206, 143, 0.2) 0%, rgba(246, 206, 143, 0) 42%),
+    url("../assets/westernbg.png") center / cover no-repeat;
+  background-blend-mode: multiply, screen, normal;
+}
+
+.nutshell-sheet[data-theme="western"]::before,
+.nutshell-sheet[data-theme="western"]::after {
+  border-radius: 0;
+  z-index: 0;
+}
+
+.nutshell-sheet[data-theme="western"]::before {
+  width: 220px;
+  height: 220px;
+  right: -44px;
+  top: -48px;
+  opacity: 0.56;
+  background:
+    radial-gradient(circle at center, rgba(255, 224, 160, 0.26) 0 22%, transparent 26%),
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(245, 193, 91, 0.85) 0 8deg,
+      rgba(245, 193, 91, 0) 8deg 18deg
+    ),
+    radial-gradient(circle at center, transparent 0 56%, rgba(244, 207, 141, 0.72) 56% 62%, transparent 63%);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 5px 10px rgba(30, 14, 5, 0.45));
+  animation: western-spur-whirl 11.5s ease-in-out infinite;
+}
+
+.nutshell-sheet[data-theme="western"]::after {
+  width: 320px;
+  height: 130px;
+  right: -78px;
+  top: -8px;
+  opacity: 0.3;
+  background:
+    radial-gradient(220px 80px at 78% 26%, rgba(239, 190, 115, 0.45) 0%, rgba(239, 190, 115, 0) 70%),
+    repeating-linear-gradient(
+      -12deg,
+      rgba(227, 170, 95, 0.15) 0 3px,
+      rgba(0, 0, 0, 0) 3px 12px
+    );
+  background-size: 100% 100%, 160% 100%;
+  animation: western-dust-ripple 9.2s ease-in-out infinite;
+}
+
+.nutshell-sheet[data-theme="western"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nutshell-sheet[data-theme="western"] .sheet-header,
+.nutshell-sheet[data-theme="western"] .sheet-section,
+.nutshell-sheet[data-theme="western"] .sheet-footer {
+  border-color: #7a4e2d;
+  box-shadow: inset 0 0 0 1px rgba(223, 179, 113, 0.24), 0 2px 9px rgba(33, 16, 6, 0.34);
+  background: linear-gradient(180deg, rgba(250, 234, 200, 0.8) 0%, rgba(229, 199, 147, 0.84) 100%);
+}
+
+.nutshell-sheet[data-theme="western"] .sheet-header::before,
+.nutshell-sheet[data-theme="western"] .sheet-section::before,
+.nutshell-sheet[data-theme="western"] .sheet-footer::before {
+  border-color: rgba(128, 86, 48, 0.52);
+}
+
+.nutshell-sheet[data-theme="western"] h2 {
+  color: #6a4120;
+  border-bottom-color: rgba(108, 67, 33, 0.4);
+}
+
+.nutshell-sheet[data-theme="western"] label {
+  color: #603c24;
+}
+
+.nutshell-sheet[data-theme="western"] input,
+.nutshell-sheet[data-theme="western"] textarea,
+.nutshell-sheet[data-theme="western"] select {
+  border-color: #865a35;
+  color: #311d11;
+  background: linear-gradient(180deg, rgba(250, 237, 209, 0.96) 0%, rgba(234, 208, 160, 0.95) 100%);
+}
+
+.nutshell-sheet[data-theme="western"] input[readonly] {
+  color: #52331f;
+  background: linear-gradient(180deg, rgba(241, 224, 186, 0.96) 0%, rgba(219, 188, 140, 0.95) 100%);
+}
+
+.nutshell-sheet[data-theme="western"] .strikes-grid label,
+.nutshell-sheet[data-theme="western"] .skill-item {
+  border-color: rgba(145, 98, 54, 0.68);
+  box-shadow: inset 0 0 0 1px rgba(247, 220, 169, 0.34);
+  background: linear-gradient(180deg, rgba(248, 232, 199, 0.9) 0%, rgba(231, 203, 154, 0.9) 100%);
+}
+
+.nutshell-sheet[data-theme="western"] button {
+  border-color: #744525;
+  color: #2a170c;
+  background: linear-gradient(180deg, #e6b468 0%, #b47a3e 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 222, 154, 0.65), 0 1px 4px rgba(40, 20, 8, 0.4);
+}
+
+.nutshell-sheet[data-theme="western"] button:hover,
+.nutshell-sheet[data-theme="western"] button:focus {
+  filter: brightness(1.1);
+}
+
 .nutshell-sheet .sheet-footer {
   display: grid;
   gap: 8px;
@@ -770,6 +889,36 @@ td {
   50% {
     transform: scale(1.14);
     opacity: 0.86;
+  }
+}
+
+@keyframes western-spur-whirl {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(0.95);
+    opacity: 0.48;
+  }
+  34% {
+    transform: translate(-8px, 4px) rotate(126deg) scale(1.04);
+    opacity: 0.64;
+  }
+  68% {
+    transform: translate(-14px, 11px) rotate(262deg) scale(1.08);
+    opacity: 0.5;
+  }
+}
+
+@keyframes western-dust-ripple {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.22;
+    background-position: 0 0, 0 0;
+  }
+  50% {
+    transform: translate(-24px, 4px);
+    opacity: 0.36;
+    background-position: 0 0, -46px 0;
   }
 }
 

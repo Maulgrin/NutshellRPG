@@ -16,14 +16,16 @@ const SHEET_THEMES = {
   STEAMPUNK: "steampunk",
   MATRIX: "matrix",
   SCIFI: "scifi",
-  CTHULHU: "cthulhu"
+  CTHULHU: "cthulhu",
+  WESTERN: "western"
 };
 
 const SHEET_THEME_LABELS = {
   [SHEET_THEMES.STEAMPUNK]: "Steampunk",
   [SHEET_THEMES.MATRIX]: "Matrix",
   [SHEET_THEMES.SCIFI]: "Sci-Fi",
-  [SHEET_THEMES.CTHULHU]: "Cthulhu"
+  [SHEET_THEMES.CTHULHU]: "Cthulhu",
+  [SHEET_THEMES.WESTERN]: "Western"
 };
 const MIN_SHEET_WIDTH = 586;
 const MIN_SHEET_HEIGHT = 586;
