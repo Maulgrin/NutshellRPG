@@ -494,6 +494,41 @@
   border-color: rgba(170, 153, 111, 0.35);
 }
 
+.nutshell-sheet[data-theme="cthulhu"] .sheet-header {
+  overflow: visible;
+}
+
+.nutshell-sheet[data-theme="cthulhu"] .sheet-header > * {
+  position: relative;
+  z-index: 2;
+}
+
+.nutshell-sheet[data-theme="cthulhu"] .sheet-header::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 230px;
+  left: -86px;
+  top: -108px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.76;
+  border-radius: 52% 48% 58% 42% / 40% 56% 44% 60%;
+  transform-origin: 26% 16%;
+  background:
+    radial-gradient(130px 42px at 28% 20%, rgba(113, 150, 96, 0.88) 0 56%, transparent 60%),
+    radial-gradient(142px 38px at 34% 42%, rgba(96, 133, 83, 0.86) 0 55%, transparent 60%),
+    radial-gradient(128px 34px at 32% 62%, rgba(81, 116, 71, 0.82) 0 54%, transparent 59%),
+    radial-gradient(106px 30px at 36% 81%, rgba(69, 98, 60, 0.78) 0 54%, transparent 60%),
+    radial-gradient(circle at 19% 23%, rgba(218, 246, 196, 0.42) 0 7px, transparent 8px),
+    radial-gradient(circle at 27% 38%, rgba(218, 246, 196, 0.36) 0 6px, transparent 7px),
+    radial-gradient(circle at 31% 57%, rgba(218, 246, 196, 0.3) 0 5px, transparent 6px),
+    radial-gradient(circle at 38% 75%, rgba(218, 246, 196, 0.28) 0 5px, transparent 6px),
+    linear-gradient(140deg, rgba(176, 215, 142, 0.22) 0%, rgba(176, 215, 142, 0) 52%);
+  filter: drop-shadow(0 7px 10px rgba(0, 0, 0, 0.52));
+  animation: cthulhu-tentacle-writhe 8.4s ease-in-out infinite;
+}
+
 .nutshell-sheet[data-theme="cthulhu"] h2 {
   color: #d9cfb1;
   border-bottom-color: rgba(156, 178, 132, 0.35);
@@ -658,6 +693,7 @@ td {
   .nutshell-sheet > *,
   .nutshell-sheet::before,
   .nutshell-sheet::after,
+  .nutshell-sheet[data-theme="cthulhu"] .sheet-header::after,
   .nutshell-sheet button {
     animation: none;
     transition: none;
@@ -752,5 +788,21 @@ td {
   50% {
     transform: scale(1.08);
     opacity: 0.62;
+  }
+}
+
+@keyframes cthulhu-tentacle-writhe {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-14deg) scale(1);
+  }
+  30% {
+    transform: translate(8px, 3px) rotate(-7deg) scale(1.04);
+  }
+  60% {
+    transform: translate(-6px, 10px) rotate(-18deg) scale(0.97);
+  }
+  82% {
+    transform: translate(3px, 6px) rotate(-12deg) scale(1.02);
   }
 }
