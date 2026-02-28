@@ -24,6 +24,7 @@
       rgba(255, 255, 255, 0.03) 0 10px,
       rgba(64, 40, 24, 0.07) 10px 20px
     ),
+    url("../assets/steambg.png") center / cover no-repeat,
     linear-gradient(150deg, #3a281b 0%, #5a3d28 35%, #24180f 100%);
 }
 
@@ -193,6 +194,7 @@
       rgba(86, 255, 114, 0.08) 0 1px,
       rgba(0, 0, 0, 0) 1px 4px
     ),
+    url("../assets/fauxmatrix.png") center / cover no-repeat,
     linear-gradient(150deg, #020b03 0%, #031607 50%, #000500 100%);
 }
 
