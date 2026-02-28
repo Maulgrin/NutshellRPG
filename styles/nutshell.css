@@ -751,6 +751,47 @@
   width: 100%;
 }
 
+.nutshell-sheet .skill-validation {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.nutshell-sheet .skill-validation--under-skulduggery {
+  grid-column: 2;
+  align-self: start;
+  justify-self: start;
+}
+
+.nutshell-sheet .skill-validation-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.nutshell-sheet .skill-validation.is-valid {
+  color: #0f7f2c;
+}
+
+.nutshell-sheet .skill-validation.is-valid .skill-validation-icon::before {
+  content: "\2713";
+}
+
+.nutshell-sheet .skill-validation.is-invalid {
+  color: #a11717;
+}
+
+.nutshell-sheet .skill-validation.is-invalid .skill-validation-icon::before {
+  content: "X";
+}
+
 .nutshell-chat-card {
   color: var(--ink);
 }
@@ -810,6 +851,10 @@ td {
 
   .nutshell-sheet .skill-item {
     grid-template-columns: 1fr;
+  }
+
+  .nutshell-sheet .skill-validation--under-skulduggery {
+    grid-column: 1;
   }
 }
 

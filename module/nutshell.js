@@ -29,6 +29,48 @@ const SHEET_THEME_LABELS = {
 };
 const MIN_SHEET_WIDTH = 586;
 const MIN_SHEET_HEIGHT = 586;
+const SKILL_VALUE_MIN = -2;
+const SKILL_VALUE_MAX = 3;
+const SKILL_SUM_TARGET = 5;
+const SKILL_NEGATIVE_MIN_TOTAL = -3;
+
+function normalizeSkillValue(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 0;
+  return Math.trunc(numeric);
+}
+
+function clampSkillValue(value) {
+  const normalized = normalizeSkillValue(value);
+  return Math.min(SKILL_VALUE_MAX, Math.max(SKILL_VALUE_MIN, normalized));
+}
+
+function evaluateSkillValidation(skills = {}) {
+  let sum = 0;
+  let negativeTotal = 0;
+  let rangeValid = true;
+
+  for (const { key } of SKILL_FIELDS) {
+    const rawValue = normalizeSkillValue(skills?.[key] ?? 0);
+    if (rawValue < SKILL_VALUE_MIN || rawValue > SKILL_VALUE_MAX) {
+      rangeValid = false;
+    }
+
+    const value = clampSkillValue(rawValue);
+    sum += value;
+    if (value < 0) {
+      negativeTotal += value;
+    }
+  }
+
+  return {
+    sum,
+    sumValid: sum === SKILL_SUM_TARGET,
+    negativeTotal,
+    negativeTotalValid: negativeTotal >= SKILL_NEGATIVE_MIN_TOTAL,
+    rangeValid
+  };
+}
 
 const REFERENCE_CHARTS = [
   {
@@ -117,6 +159,16 @@ async function seedReferenceChartsCompendium() {
 class NutshellCharacterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
+    const skillField = () =>
+      new fields.NumberField({
+        required: true,
+        nullable: false,
+        initial: 0,
+        integer: true,
+        min: SKILL_VALUE_MIN,
+        max: SKILL_VALUE_MAX
+      });
+
     return {
       strikes: new fields.SchemaField({
         max: new fields.NumberField({ required: false, nullable: false, initial: 0, integer: true, min: 0 }),
@@ -126,17 +178,17 @@ class NutshellCharacterData extends foundry.abstract.TypeDataModel {
       powerTheme: new fields.StringField({ required: false, blank: true, initial: "" }),
       gear: new fields.StringField({ required: false, blank: true, initial: "" }),
       skills: new fields.SchemaField({
-        closeCombat: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        rangedCombat: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        perception: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        survival: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        endurance: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        fitness: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        persuasion: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        expertise: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        skulduggery: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
-        operate: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true })
+        closeCombat: skillField(),
+        rangedCombat: skillField(),
+        perception: skillField(),
+        survival: skillField(),
+        endurance: skillField(),
+        fitness: skillField(),
+        persuasion: skillField(),
+        expertise: skillField(),
+        power: skillField(),
+        skulduggery: skillField(),
+        operate: skillField()
       })
     };
   }
@@ -193,8 +245,12 @@ class NutshellActorSheet extends ActorSheet {
   async getData(options = {}) {
     const context = await super.getData(options);
     const currentTheme = game.settings?.get("nutshell", "sheetTheme") ?? SHEET_THEMES.STEAMPUNK;
+    const skillValues = {};
+
     context.system = this.actor.system;
     context.sheetTheme = currentTheme;
+    context.skillValueMin = SKILL_VALUE_MIN;
+    context.skillValueMax = SKILL_VALUE_MAX;
     context.themeOptions = Object.entries(SHEET_THEME_LABELS).map(([value, label]) => ({
       value,
       label,
@@ -203,8 +259,12 @@ class NutshellActorSheet extends ActorSheet {
     context.skills = SKILL_FIELDS.map(({ key, label }) => ({
       key,
       label,
-      value: Number(this.actor.system.skills?.[key] ?? 0)
+      value: clampSkillValue(this.actor.system.skills?.[key] ?? 0)
     }));
+    for (const skill of context.skills) {
+      skillValues[skill.key] = skill.value;
+    }
+    context.skillValidation = evaluateSkillValidation(skillValues);
     return context;
   }
 
@@ -215,6 +275,97 @@ class NutshellActorSheet extends ActorSheet {
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));
     html.find('[data-action="select-theme"]').on("change", this._onThemeChange.bind(this));
+    html.find('input[name^="system.skills."]').on("input", this._onSkillValueInput.bind(this));
+    this._refreshSkillValidationIndicator(html);
+  }
+
+  _getSkillValuesFromSheet(html = this.element) {
+    const skillValues = {};
+    for (const { key } of SKILL_FIELDS) {
+      const input = html.find(`input[name="system.skills.${key}"]`);
+      if (input.length) {
+        skillValues[key] = normalizeSkillValue(input.val());
+      } else {
+        skillValues[key] = normalizeSkillValue(this.actor.system.skills?.[key] ?? 0);
+      }
+    }
+    return skillValues;
+  }
+
+  _refreshSkillValidationIndicator(html = this.element) {
+    if (!html?.length) return;
+    const validation = evaluateSkillValidation(this._getSkillValuesFromSheet(html));
+    const indicator = html.find("[data-skill-validation]");
+    if (!indicator.length) return;
+
+    indicator.toggleClass("is-valid", validation.sumValid);
+    indicator.toggleClass("is-invalid", !validation.sumValid);
+    indicator.attr(
+      "title",
+      `Total ${validation.sum}/${SKILL_SUM_TARGET}. Negative total ${validation.negativeTotal} (minimum ${SKILL_NEGATIVE_MIN_TOTAL}).`
+    );
+  }
+
+  _onSkillValueInput() {
+    this._refreshSkillValidationIndicator(this.element);
+  }
+
+  _sanitizeSkillInput(input) {
+    if (!input?.name?.startsWith("system.skills.")) return;
+
+    const rawValue = String(input.value ?? "").trim();
+    if (!rawValue || rawValue === "-") {
+      input.value = "0";
+      return;
+    }
+
+    input.value = String(clampSkillValue(rawValue));
+  }
+
+  async _onChangeInput(event) {
+    const input = event?.currentTarget;
+    if (input?.name?.startsWith("system.skills.")) {
+      this._sanitizeSkillInput(input);
+      const skillValues = this._getSkillValuesFromSheet(this.element);
+      const validation = evaluateSkillValidation(skillValues);
+
+      if (!validation.negativeTotalValid) {
+        const skillKey = String(input.name).replace("system.skills.", "");
+        input.value = String(clampSkillValue(this.actor.system.skills?.[skillKey] ?? 0));
+        ui.notifications.warn(`Combined negative skills cannot be lower than ${SKILL_NEGATIVE_MIN_TOTAL}.`);
+        this._refreshSkillValidationIndicator(this.element);
+        return;
+      }
+    }
+
+    const result = await super._onChangeInput(event);
+    this._refreshSkillValidationIndicator(this.element);
+    return result;
+  }
+
+  _getSubmitData(updateData = {}) {
+    const data = super._getSubmitData(updateData);
+    const pendingSkills = {};
+
+    for (const { key } of SKILL_FIELDS) {
+      const path = `system.skills.${key}`;
+      if (Object.prototype.hasOwnProperty.call(data, path)) {
+        data[path] = clampSkillValue(data[path]);
+      }
+      pendingSkills[key] = Object.prototype.hasOwnProperty.call(data, path)
+        ? data[path]
+        : clampSkillValue(this.actor.system.skills?.[key] ?? 0);
+    }
+
+    const validation = evaluateSkillValidation(pendingSkills);
+    if (!validation.negativeTotalValid) {
+      for (const { key } of SKILL_FIELDS) {
+        delete data[`system.skills.${key}`];
+      }
+      ui.notifications.warn(`Combined negative skills cannot be lower than ${SKILL_NEGATIVE_MIN_TOTAL}.`);
+    }
+
+    return data;
   }
 
   async _onSkillRoll(event) {

@@ -43,10 +43,21 @@
       {{#each skills as |skill|}}
         <div class="skill-item">
           <label for="skill-{{skill.key}}">{{skill.label}}</label>
-          <input id="skill-{{skill.key}}" type="number" name="system.skills.{{skill.key}}" value="{{skill.value}}" />
+          <input
+            id="skill-{{skill.key}}"
+            type="number"
+            name="system.skills.{{skill.key}}"
+            value="{{skill.value}}"
+            min="{{../skillValueMin}}"
+            max="{{../skillValueMax}}"
+            step="1"
+          />
           <button type="button" data-action="skill-roll" data-skill="{{skill.key}}">Roll</button>
         </div>
       {{/each}}
+      <p class="skill-validation skill-validation--under-skulduggery {{#if skillValidation.sumValid}}is-valid{{else}}is-invalid{{/if}}" data-skill-validation>
+        Skills <span class="skill-validation-icon" aria-hidden="true"></span>
+      </p>
     </div>
   </section>
 
