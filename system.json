@@ -27,6 +27,7 @@
       "npc": {}
     }
   },
+  "initiative": "2d6 + @initiative.modifier",
   "packs": [
     {
       "label": "Reference Charts",

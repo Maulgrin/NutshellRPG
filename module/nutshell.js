@@ -269,6 +269,43 @@ class NutshellCharacterData extends foundry.abstract.TypeDataModel {
 }
 
 class NutshellActor extends Actor {
+  _getSkillNumericValue(skillKey) {
+    const directValue = Number(foundry.utils.getProperty(this, `system.skills.${skillKey}`));
+    if (Number.isFinite(directValue)) return directValue;
+
+    const legacyValue = Number(foundry.utils.getProperty(this, `system.skills.${skillKey}.value`));
+    if (Number.isFinite(legacyValue)) return legacyValue;
+
+    return 0;
+  }
+
+  _getInitiativeModifier() {
+    const perception = this._getSkillNumericValue("perception");
+    const fitness = this._getSkillNumericValue("fitness");
+    return Math.max(perception, fitness);
+  }
+
+  getRollData() {
+    const rollData = super.getRollData();
+    const perception = this._getSkillNumericValue("perception");
+    const fitness = this._getSkillNumericValue("fitness");
+    const initiativeModifier = this._getInitiativeModifier();
+
+    // Expose stable roll paths for initiative formulas across Foundry versions.
+    rollData.skills = rollData.skills || {};
+    rollData.skills.perception = perception;
+    rollData.skills.fitness = fitness;
+    rollData.initiative = rollData.initiative || {};
+    rollData.initiative.modifier = initiativeModifier;
+
+    return rollData;
+  }
+
+  getInitiativeFormula() {
+    if (!["character", "npc"].includes(this.type)) return super.getInitiativeFormula();
+    return "2d6 + @initiative.modifier";
+  }
+
   prepareDerivedData() {
     super.prepareDerivedData();
     if (!["character", "npc"].includes(this.type)) return;
