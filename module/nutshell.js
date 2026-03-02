@@ -8,7 +8,7 @@ const SKILL_FIELDS = [
   { key: "persuasion", label: "Persuasion" },
   { key: "expertise", label: "Expertise" },
   { key: "power", label: "Power" },
-  { key: "skulduggery", label: "Skulduggery" },
+  { key: "skulduggery", label: "Skullduggery" },
   { key: "operate", label: "Operate" }
 ];
 
@@ -185,7 +185,7 @@ const REFERENCE_CHARTS = [
 <li><strong>Persuasion</strong> - Social, convince, seduce, negotiate</li>
 <li><strong>Expertise</strong> - Build and repair things, applied knowledge</li>
 <li><strong>Power</strong> - Willpower and morale, also magic if appropriate</li>
-<li><strong>Skulduggery</strong> - Stealth, lock picking, sleight of hand and similar things</li>
+<li><strong>Skullduggery</strong> - Stealth, lock picking, sleight of hand and similar things</li>
 <li><strong>Operate</strong> - Ride a horse, drive a carriage, vehicle, airplane, space craft</li>
 </ul>
 <p><strong>The Power Skill and Magic:</strong> If appropriate to the type of game the table has agreed on, pick a magical or magic-like theme for your Power Skill (nature, fire, telekinesis, divine, etc.).</p>`

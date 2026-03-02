@@ -8,7 +8,7 @@ const SKILL_LABELS = {
   persuasion: "Persuasion",
   expertise: "Expertise",
   power: "Power",
-  skulduggery: "Skulduggery",
+  skulduggery: "Skullduggery",
   operate: "Operate"
 };
 
