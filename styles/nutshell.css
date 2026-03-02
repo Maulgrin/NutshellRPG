@@ -426,6 +426,121 @@
   filter: brightness(1.12);
 }
 
+.nutshell-sheet[data-theme="cyberpunk"] {
+  --ink: #ffe7e7;
+  --ink-soft: #ffb8b8;
+  --brass: #ff2a2a;
+  --brass-deep: #8a1010;
+  --shadow: rgba(0, 0, 0, 0.9);
+  isolation: isolate;
+  border-color: #d41a1a;
+  box-shadow: inset 0 0 0 1px rgba(255, 102, 102, 0.35), 0 10px 28px var(--shadow);
+  font-family: "Rajdhani", "Exo 2", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(165deg, rgba(3, 3, 3, 0.72) 0%, rgba(11, 2, 2, 0.78) 50%, rgba(0, 0, 0, 0.86) 100%),
+    radial-gradient(circle at 18% 16%, rgba(255, 44, 44, 0.28) 0%, rgba(255, 44, 44, 0) 44%),
+    radial-gradient(circle at 82% 24%, rgba(120, 0, 0, 0.3) 0%, rgba(120, 0, 0, 0) 48%),
+    url("../assets/cpunk.png") center / cover no-repeat;
+  background-blend-mode: multiply, screen, screen, normal;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"]::before,
+.nutshell-sheet[data-theme="cyberpunk"]::after {
+  border-radius: 0;
+  z-index: 0;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"]::before {
+  width: 42%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0.42;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 68, 68, 0.34) 0 2px,
+      rgba(12, 0, 0, 0) 2px 12px
+    ),
+    linear-gradient(90deg, rgba(33, 4, 4, 0.58) 0%, rgba(33, 4, 4, 0) 100%);
+  mix-blend-mode: screen;
+  animation: scanline-drift 5.8s linear infinite;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"]::after {
+  width: 210px;
+  height: 210px;
+  right: -22px;
+  top: -24px;
+  opacity: 0.68;
+  background:
+    radial-gradient(circle at center, rgba(255, 60, 60, 0.14) 0 20px, transparent 20px),
+    radial-gradient(circle at center, transparent 0 38px, rgba(255, 50, 50, 0.84) 38px 42px, transparent 42px),
+    radial-gradient(circle at center, transparent 0 67px, rgba(150, 12, 12, 0.72) 67px 70px, transparent 70px);
+  mix-blend-mode: screen;
+  animation: hud-pulse 2.2s ease-in-out infinite;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-header,
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-section,
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-footer {
+  border-color: #7f1515;
+  box-shadow: inset 0 0 0 1px rgba(255, 96, 96, 0.24), 0 2px 10px rgba(0, 0, 0, 0.62);
+  background: linear-gradient(180deg, rgba(16, 4, 4, 0.8) 0%, rgba(6, 2, 2, 0.88) 100%);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-header::before,
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-section::before,
+.nutshell-sheet[data-theme="cyberpunk"] .sheet-footer::before {
+  border-color: rgba(255, 88, 88, 0.4);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] h2 {
+  color: #ffd1d1;
+  border-bottom-color: rgba(255, 84, 84, 0.45);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] label {
+  color: #ffbebe;
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] input,
+.nutshell-sheet[data-theme="cyberpunk"] textarea,
+.nutshell-sheet[data-theme="cyberpunk"] select {
+  border-color: #b32828;
+  color: #ffe6e6;
+  background: linear-gradient(180deg, rgba(22, 4, 4, 0.95) 0%, rgba(8, 2, 2, 0.97) 100%);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] input[readonly] {
+  color: #ffcccc;
+  background: linear-gradient(180deg, rgba(28, 6, 6, 0.95) 0%, rgba(10, 2, 2, 0.97) 100%);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] .strikes-grid label,
+.nutshell-sheet[data-theme="cyberpunk"] .skill-item {
+  border-color: rgba(255, 74, 74, 0.76);
+  box-shadow: inset 0 0 0 1px rgba(255, 130, 130, 0.16);
+  background: linear-gradient(180deg, rgba(22, 4, 4, 0.9) 0%, rgba(8, 2, 2, 0.94) 100%);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] button {
+  border-color: #e13636;
+  color: #ffecec;
+  background: linear-gradient(180deg, #7a1414 0%, #3a0909 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 142, 142, 0.3), 0 1px 4px rgba(0, 0, 0, 0.64);
+}
+
+.nutshell-sheet[data-theme="cyberpunk"] button:hover,
+.nutshell-sheet[data-theme="cyberpunk"] button:focus {
+  filter: brightness(1.16);
+}
+
 .nutshell-sheet[data-theme="cthulhu"] {
   --ink: #e7dfc7;
   --ink-soft: #c7bca1;
