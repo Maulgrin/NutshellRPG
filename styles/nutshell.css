@@ -830,6 +830,11 @@
   margin-bottom: 1em;
 }
 
+.nutshell-sheet[data-theme="cyberpunk"] .theme-selector,
+.nutshell-sheet[data-theme="cyberpunk"] .theme-selector option {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
 .nutshell-sheet select.theme-selector,
 .nutshell-sheet[data-theme] select.theme-selector {
   color: #1b140d;
