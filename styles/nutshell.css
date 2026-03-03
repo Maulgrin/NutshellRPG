@@ -141,6 +141,10 @@
   color: #4d3824;
 }
 
+.nutshell-sheet .sheet-header #actor-name {
+  width: 82%;
+}
+
 .nutshell-sheet .top-layout {
   display: grid;
   gap: 12px;
