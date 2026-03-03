@@ -31,7 +31,7 @@ Foundry VTT system implementation for **Nutshell RPG**.
   - Name, strikes, power theme, and gear
   - Skill grid with per-skill roll buttons
   - Action buttons for `Ranged Attack` and `Close Combat Opposed`
-  - Theme selector (`Steampunk`, `Matrix`, `Sci-Fi`, `Cthulhu`)
+- Theme selector (`Brass`, `Neon Green`, `Electric Cyan`, `Crimson Red`, `Mossy Olive`, `Saddle Brown`)
 - Roll helpers and chat cards:
   - Generic skill roll: `2d6 + skill`
   - Ranged attack: `2d6 + rangedCombat`

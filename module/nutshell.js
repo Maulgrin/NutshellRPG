@@ -22,12 +22,12 @@ const SHEET_THEMES = {
 };
 
 const SHEET_THEME_LABELS = {
-  [SHEET_THEMES.STEAMPUNK]: "Steampunk",
-  [SHEET_THEMES.MATRIX]: "Matrix",
-  [SHEET_THEMES.SCIFI]: "Sci-Fi",
-  [SHEET_THEMES.CYBERPUNK]: "Cyberpunk",
-  [SHEET_THEMES.CTHULHU]: "Cthulhu",
-  [SHEET_THEMES.WESTERN]: "Western"
+  [SHEET_THEMES.STEAMPUNK]: "Brass",
+  [SHEET_THEMES.MATRIX]: "Neon Green",
+  [SHEET_THEMES.SCIFI]: "Electric Cyan",
+  [SHEET_THEMES.CYBERPUNK]: "Crimson Red",
+  [SHEET_THEMES.CTHULHU]: "Mossy Olive",
+  [SHEET_THEMES.WESTERN]: "Saddle Brown"
 };
 const MIN_SHEET_WIDTH = 586;
 const MIN_SHEET_HEIGHT = 877;
