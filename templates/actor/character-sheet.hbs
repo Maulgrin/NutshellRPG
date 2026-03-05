@@ -18,7 +18,13 @@
           <option value="{{theme.value}}" {{#if theme.selected}}selected{{/if}}>{{theme.label}}</option>
         {{/each}}
       </select>
-      <h2>Strikes</h2>
+      <div class="strikes-header">
+        <h2>Strikes</h2>
+        <label class="strain-toggle">
+          <span>Strain</span>
+          <input type="checkbox" name="system.strain.enabled" {{#if system.strain.enabled}}checked{{/if}} />
+        </label>
+      </div>
       <div class="strikes-grid">
         <label>
           <span>Max</span>
@@ -33,6 +39,22 @@
           <input type="number" name="system.strikes.remaining" value="{{system.strikes.remaining}}" readonly />
         </label>
       </div>
+      {{#if system.strain.enabled}}
+        <div class="strikes-grid strain-grid">
+          <label>
+            <span>Strain Max</span>
+            <input type="number" name="system.strain.max" value="{{system.strain.max}}" readonly />
+          </label>
+          <label>
+            <span>Taken</span>
+            <input type="number" name="system.strain.taken" value="{{system.strain.taken}}" />
+          </label>
+          <label>
+            <span>Left</span>
+            <input type="number" name="system.strain.remaining" value="{{system.strain.remaining}}" readonly />
+          </label>
+        </div>
+      {{/if}}
     </section>
   </section>
 

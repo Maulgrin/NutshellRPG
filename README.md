@@ -10,6 +10,7 @@ Foundry VTT system implementation for **Nutshell RPG**.
 - Actor types: `character` and `npc`
 - Shared data model for both actor types:
   - `strikes` (`taken`, derived `max`, derived `remaining`)
+  - `strain` (`enabled`, `taken`, derived `max`, derived `remaining`)
   - `powerTheme`
   - `gear`
   - `skills`:
@@ -27,8 +28,10 @@ Foundry VTT system implementation for **Nutshell RPG**.
 - Derived values:
   - `strikes.max = 4 + endurance`
   - `strikes.remaining = max - taken` (minimum `0`)
+  - `strain.max = 4 + power`
+  - `strain.remaining = max - taken` (minimum `0`)
 - Unified actor sheet with:
-  - Name, strikes, power theme, and gear
+  - Name, strikes, optional strain, power theme, and gear
   - Skill grid with per-skill roll buttons
   - Action buttons for `Ranged Attack` and `Close Combat Opposed`
 - Theme selector (`Brass`, `Neon Green`, `Electric Cyan`, `Crimson Red`, `Mossy Olive`, `Saddle Brown`)

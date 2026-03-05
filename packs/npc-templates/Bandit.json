@@ -5,6 +5,10 @@
     "strikes": {
       "taken": 0
     },
+    "strain": {
+      "enabled": false,
+      "taken": 0
+    },
     "powerTheme": "",
     "gear": "Knife, leather armor",
     "skills": {

@@ -163,10 +163,42 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.nutshell-sheet .strikes-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nutshell-sheet .strikes-header h2 {
+  flex: 1;
+}
+
 .nutshell-sheet .strikes-grid label {
   padding: 6px;
   border: 1px solid rgba(123, 87, 47, 0.5);
   background: rgba(245, 232, 197, 0.7);
+}
+
+.nutshell-sheet .strain-toggle {
+  margin: 0 0 8px auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nutshell-sheet .strain-toggle input[type="checkbox"] {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin: 0;
+}
+
+.nutshell-sheet .strain-grid {
+  margin-top: 10px;
 }
 
 .nutshell-sheet button {

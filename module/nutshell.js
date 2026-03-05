@@ -251,6 +251,12 @@ class NutshellCharacterData extends foundry.abstract.TypeDataModel {
         taken: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true, min: 0 }),
         remaining: new fields.NumberField({ required: false, nullable: false, initial: 0, integer: true, min: 0 })
       }),
+      strain: new fields.SchemaField({
+        enabled: new fields.BooleanField({ required: true, nullable: false, initial: false }),
+        max: new fields.NumberField({ required: false, nullable: false, initial: 0, integer: true, min: 0 }),
+        taken: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true, min: 0 }),
+        remaining: new fields.NumberField({ required: false, nullable: false, initial: 0, integer: true, min: 0 })
+      }),
       powerTheme: new fields.StringField({ required: false, blank: true, initial: "" }),
       gear: new fields.StringField({ required: false, blank: true, initial: "" }),
       skills: new fields.SchemaField({
@@ -313,11 +319,16 @@ class NutshellActor extends Actor {
     if (!["character", "npc"].includes(this.type)) return;
 
     const endurance = Number(this.system.skills?.endurance ?? 0);
+    const power = Number(this.system.skills?.power ?? 0);
     const taken = Math.max(0, Number(this.system.strikes?.taken ?? 0));
+    const strainTaken = Math.max(0, Number(this.system.strain?.taken ?? 0));
     const maxStrikes = 4 + endurance;
+    const maxStrain = 4 + power;
 
     this.system.strikes.max = maxStrikes;
     this.system.strikes.remaining = Math.max(0, maxStrikes - taken);
+    this.system.strain.max = maxStrain;
+    this.system.strain.remaining = Math.max(0, maxStrain - strainTaken);
   }
 }
 
