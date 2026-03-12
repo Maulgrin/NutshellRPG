@@ -16,7 +16,8 @@ const TARGET_OPTIONS = [4, 6, 8, 10, 12, 14];
 const SOCKET_ACTIONS = {
   REQUEST_GM_SKILL_ROLL: "REQUEST_GM_SKILL_ROLL",
   REQUEST_GM_RANGED_ATTACK: "REQUEST_GM_RANGED_ATTACK",
-  REQUEST_GM_CLOSE_OPPOSED: "REQUEST_GM_CLOSE_OPPOSED"
+  REQUEST_GM_CLOSE_OPPOSED: "REQUEST_GM_CLOSE_OPPOSED",
+  REQUEST_GM_POWER_ATTACK: "REQUEST_GM_POWER_ATTACK"
 };
 
 function getSkillValue(actor, skillKey) {
@@ -290,6 +291,34 @@ async function resolveCloseCombatOpposed(actor) {
   });
 }
 
+async function resolvePowerAttack(actor) {
+  const targetNumber = await promptForNumber({
+    title: "Power Attack",
+    label: "Target Number",
+    defaultValue: 8
+  });
+
+  if (targetNumber === null) return;
+
+  const modifier = getSkillValue(actor, "power");
+  const roll = await new Roll("2d6 + @modifier", { modifier }).evaluate();
+  const total = Number(roll.total ?? 0);
+  const difference = total - targetNumber;
+  const success = difference >= 0;
+  const strikes = success ? strikesFromDifference(difference) : 0;
+
+  return postRollCard(actor, {
+    title: "Power Attack",
+    roll,
+    modifier,
+    total,
+    targetNumber,
+    success,
+    difference,
+    strikes
+  });
+}
+
 async function rangedAttack(actor) {
   if (!game.user.isGM) {
     await requestGmAction(actor, SOCKET_ACTIONS.REQUEST_GM_RANGED_ATTACK, "Requested GM target entry for ranged attack.");
@@ -306,11 +335,20 @@ async function closeCombatOpposed(actor) {
   return resolveCloseCombatOpposed(actor);
 }
 
+async function powerAttack(actor) {
+  if (!game.user.isGM) {
+    await requestGmAction(actor, SOCKET_ACTIONS.REQUEST_GM_POWER_ATTACK, "Requested GM target entry for power attack.");
+    return;
+  }
+  return resolvePowerAttack(actor);
+}
+
 const NutshellRolls = {
   skillLabels: SKILL_LABELS,
   genericSkillRoll,
   rangedAttack,
-  closeCombatOpposed
+  closeCombatOpposed,
+  powerAttack
 };
 
 let socketListenersRegistered = false;
@@ -324,7 +362,8 @@ function registerSocketListeners() {
     const supportedActions = new Set([
       SOCKET_ACTIONS.REQUEST_GM_SKILL_ROLL,
       SOCKET_ACTIONS.REQUEST_GM_RANGED_ATTACK,
-      SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED
+      SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED,
+      SOCKET_ACTIONS.REQUEST_GM_POWER_ATTACK
     ]);
     if (!supportedActions.has(payload.action)) return;
     if (!game.user.isGM) return;
@@ -348,6 +387,9 @@ function registerSocketListeners() {
       case SOCKET_ACTIONS.REQUEST_GM_CLOSE_OPPOSED:
         await resolveCloseCombatOpposed(actor);
         break;
+      case SOCKET_ACTIONS.REQUEST_GM_POWER_ATTACK:
+        await resolvePowerAttack(actor);
+        break;
       default:
         break;
     }
@@ -367,4 +409,4 @@ Hooks.once("ready", () => {
   registerSocketListeners();
 });
 
-export { SKILL_LABELS, genericSkillRoll, rangedAttack, closeCombatOpposed };
+export { SKILL_LABELS, genericSkillRoll, rangedAttack, closeCombatOpposed, powerAttack };

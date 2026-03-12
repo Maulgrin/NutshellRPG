@@ -399,6 +399,7 @@ class NutshellActorSheet extends ActorSheet {
     html.find('[data-action="skill-roll"]').on("click", this._onSkillRoll.bind(this));
     html.find('[data-action="ranged-attack"]').on("click", this._onRangedAttack.bind(this));
     html.find('[data-action="close-opposed"]').on("click", this._onCloseOpposed.bind(this));
+    html.find('[data-action="power-attack"]').on("click", this._onPowerAttack.bind(this));
     html.find('[data-action="reset-skills"]').on("click", this._onResetSkills.bind(this));
     html.find('[data-action="random-skills"]').on("click", this._onRandomSkills.bind(this));
     html.find('[data-action="toggle-skill-lock"]').on("change", this._onSkillActionsLockChange.bind(this));
@@ -583,6 +584,13 @@ class NutshellActorSheet extends ActorSheet {
   async _onCloseOpposed(event) {
     event.preventDefault();
     const roller = game.nutshell?.rolls?.closeCombatOpposed ?? globalThis.NutshellRolls?.closeCombatOpposed;
+    if (!roller) return ui.notifications.error("Nutshell roll helpers are unavailable.");
+    await roller(this.actor);
+  }
+
+  async _onPowerAttack(event) {
+    event.preventDefault();
+    const roller = game.nutshell?.rolls?.powerAttack ?? globalThis.NutshellRolls?.powerAttack;
     if (!roller) return ui.notifications.error("Nutshell roll helpers are unavailable.");
     await roller(this.actor);
   }
